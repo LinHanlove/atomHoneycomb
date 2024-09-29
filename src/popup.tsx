@@ -38,9 +38,14 @@ const Content = () => {
     ) as any
   )
 
-  // 是否展示
+  // 是否展示设置
   const openSetting = () => {
     setSetModel(showModel === "true" ? "false" : "true")
+  }
+
+  // 是否展示删除
+  const openDelete = () => {
+    setShowEditModel(showEditModel === "true" ? "false" : "true")
   }
 
   // 别名
@@ -74,19 +79,30 @@ const Content = () => {
       prefix,
       suffix
     }
-    // 如果本地不存在在去存储
-    if (
-      !setting.find((item: any) => item.alias === alias) &&
-      setting.length < 10
-    ) {
-      setSetting([...setting, newSetting])
-      setSearchTarget(searchTarget)
-      localStorage.setItem("setting", JSON.stringify([...setting, newSetting]))
-      localStorage.setItem("searchTarget", searchTarget)
-      setSetModel("false")
-    } else {
-      alert("最多添加8个别名")
+
+    if (!alias || !prefix) return setSetModel("false")
+
+    if (setting.find((item: any) => item.alias === alias)) {
+      alert("别名已存在")
+      return setSetModel("false")
     }
+
+    if (setting.length >= 10) return alert("最多添加10个别名")
+
+    setSetting([...setting, newSetting])
+    setSearchTarget(searchTarget)
+    localStorage.setItem("setting", JSON.stringify([...setting, newSetting]))
+    localStorage.setItem("searchTarget", searchTarget)
+    setSetModel("false")
+  }
+
+  // 删除快捷搜索
+  const onDelete = (key: string) => {
+    const newSetting = setting.filter(
+      (item: any, index: number) => item.alias !== key
+    )
+    setSetting(newSetting)
+    localStorage.setItem("setting", JSON.stringify(newSetting))
   }
 
   // 快捷搜索
@@ -173,22 +189,22 @@ const Content = () => {
               />
             </button>
             {/* 点击截图 */}
-            <p className="w-full text-center mt-1 text-nowrap">设置搜索</p>
+            <p className="w-full text-center mt-1 text-nowrap">设置</p>
           </div>
           <div className="w-[40px] flex justify-center items-center flex-col">
             {/* 点击截图 */}
             <button
               className="atom-button"
               type="button"
-              title="设置"
-              onClick={() => openSetting()}>
+              title="删除"
+              onClick={() => openDelete()}>
               <Icon
                 icon="tabler:settings-star"
                 className=" text-[orange] w-[20px] h-[20px]"
               />
             </button>
             {/* 点击截图 */}
-            <p className="w-full text-center mt-1 text-nowrap">修改搜索</p>
+            <p className="w-full text-center mt-1 text-nowrap">删除</p>
           </div>
         </div>
 
@@ -276,49 +292,55 @@ const Content = () => {
       {/* E 设置模态框 */}
 
       {/* S 修改模态框 */}
-      {showModel === "true" && (
+      {showEditModel === "true" && (
         <div className="modal fixed z-[9999] top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-[90%] h-[80%] bg-[#fff] px-[10px] pb-[16px] pt-2 rounded-xl  shadow-2xl">
-          <p className=" text-[14px] font-bold">查询设置</p>
+          <p className=" text-[14px] font-bold">删除设置</p>
           <div className="modal-content text-[10px]">
             <p className="mt-1 pb-1 text-[#818999]">
-              可输入支持url参数拼接搜索参数的网址 示例：
-            </p>
-            <p className=" w-full text-nowrap">
-              <span className="bg-[orange] p-1 rounded-[6px] text-[teal]">
-                https://github.com/search?q=搜索值&type=repositories
-              </span>
+              点击列表中的删除按钮即可删除
             </p>
           </div>
-          <div>
-            <p className="py-1 text-[#818999]">名称</p>
-            <Input
-              onInput={(e) => setAlias(e)}
-              placeholder="设置搜索别名"
-              width={100}
-            />
+          <div className="title flex items-center">
+            <div className="w-[10%]">名称</div>
+            <div className="w-[80%] text-center">规则</div>
+            <div className="w-[10%]">操作</div>
           </div>
-          <div>
-            <p className="py-1 text-[#818999]">设置规则</p>
-            <div className=" flex items-center justify-between">
-              <Input
-                onInput={(e) => setPrefix(e)}
-                placeholder="前缀,例：https://..."
-              />
-              <div className="text-[12px] text-[#999] flex items-center h-full">
-                + 搜索值 +
-              </div>
-              <Input
-                onInput={(e) => setSuffix(e)}
-                placeholder="后缀，没有可不填"
-              />
-            </div>
+          <div className="list overflow-y-auto h-[54%]">
+            {setting.map((item, idx) => {
+              return (
+                <div
+                  className="title flex items-center w-full flex-nowrap"
+                  key={idx}>
+                  <div className="w-[50px] truncate text-[teal]">
+                    {item.alias}
+                  </div>
+                  <div className="flex-1 flex items-center overflow-x-auto">
+                    <div className="w-[100px] truncate">{item.prefix}</div>
+                    <div className="text-[orange] w-[28px] text-nowrap text-[7px]">
+                      + 搜索值 +
+                    </div>
+                    <div className="w-[100px] truncate ml-2">
+                      {item.suffix || "--"}
+                    </div>
+                  </div>
+                  <div
+                    onClick={() => onDelete(item.alias as string)}
+                    className="w-[20px] h-[20px] rounded-full hover:bg-[#f0f0f0] flex items-center justify-center ">
+                    <Icon
+                      icon="mdi:delete-outline"
+                      className=" text-[red] w-[14px] h-[14px] cursor-pointer"
+                    />
+                  </div>
+                </div>
+              )
+            })}
           </div>
 
           <button
-            className="atom-button--small !w-auto !px-2 text-nowrap text-[teal] mx-[auto] mt-3"
+            className="atom-button--small !w-auto !px-2 text-nowrap text-[teal] mx-[auto] mt-2"
             type="button"
             title="确定"
-            onClick={async () => onSubmit()}>
+            onClick={() => setShowEditModel("false")}>
             确定
             <Icon
               icon="tabler:settings-star"

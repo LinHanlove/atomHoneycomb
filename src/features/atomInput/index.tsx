@@ -14,7 +14,8 @@ export const Input = ({
   onInput,
   value = "",
   placeholder = "输入关键字",
-  width = 120
+  width = 120,
+  readOnly = false
 }) => {
   const [input, setInput] = useState("")
   const [showClose, setShowClose] = useState(false)
@@ -49,6 +50,7 @@ export const Input = ({
             placeholder={placeholder}
             onInput={(e) => onInputChange(e.currentTarget.value)}
             value={input}
+            readOnly={readOnly}
           />
           {showClose && (
             <Icon
