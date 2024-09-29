@@ -1,6 +1,6 @@
 {
-  "name": "atom-find-diff",
-  "displayName": "Atom find diff",
+  "name": "honeycomb",
+  "displayName": "honeycomb",
   "version": "0.0.1",
   "description": "A comparison of UI style screenshots based on React and browser plugins",
   "author": "LinHan",
@@ -10,6 +10,7 @@
     "package": "plasmo package"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.2.7",
     "plasmo": "0.89.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -17,6 +18,8 @@
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "4.1.1",
+    "@iconify/react": "^5.0.2",
+    "@plasmohq/storage": "^1.12.0",
     "@types/chrome": "0.0.258",
     "@types/node": "20.11.5",
     "@types/react": "18.2.48",
@@ -28,6 +31,20 @@
   "manifest": {
     "host_permissions": [
       "https://*/*"
-    ]
+    ],
+    "permissions": [
+      "scripting",
+      "commands"
+    ],
+    "commands": {
+      "toggle-feature": {
+        "suggested_key": {
+          "default": "Ctrl+B",
+          "mac": "Ctrl+B"
+        },
+        "description": "Toggle feature foo",
+        "global": true
+      }
+    }
   }
 }
