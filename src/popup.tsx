@@ -55,21 +55,52 @@ const Content = () => {
   // 后缀
   const [suffix, setSuffix] = useState("")
 
+  // 快捷搜索
+  const [search, setSearch] = useState("")
+
   // 搜索目标
   const [searchTarget, setSearchTarget] = useState(
     localStorage.getItem("searchTarget") || "0"
   )
 
-  // 图标
+  // 图标 各种蜜蜂
   const icons = [
-    "arcticons:bigo-live",
-    "devicon:livewire",
-    "emojione:bug",
-    "emojione:cat",
-    "emojione:dog",
-    "emojione:fish",
-    "emojione:horse",
-    "emojione:monkey"
+    "emojione:honeybee",
+    "noto-v1:honeybee",
+    "twemoji:honeybee",
+    "openmoji:honeybee",
+    "noto:honeybee",
+    "streamline-emojis:honeybee",
+    "emojione-v1:honeybee",
+    "noto-v1:honeybee",
+    "streamline-emojis:ant"
+  ]
+
+  // 随机生成图标
+  const randomIcon = () => {
+    return icons[Math.floor(Math.random() * icons.length)]
+  }
+
+  // 菜单
+  const menuList = [
+    {
+      title: "截图",
+      icon: "tabler:screenshot",
+      iconColor: "#00c983",
+      event: () => openCapture()
+    },
+    {
+      title: "设置预设",
+      icon: "tabler:settings-star",
+      iconColor: "orange",
+      event: () => openSetting()
+    },
+    {
+      title: "删除预设",
+      icon: "mdi:delete-outline",
+      iconColor: "red",
+      event: () => openDelete()
+    }
   ]
 
   // 添加快捷搜索
@@ -87,8 +118,6 @@ const Content = () => {
       return setSetModel("false")
     }
 
-    if (setting.length >= 10) return alert("最多添加10个别名")
-
     setSetting([...setting, newSetting])
     setSearchTarget(searchTarget)
     localStorage.setItem("setting", JSON.stringify([...setting, newSetting]))
@@ -101,12 +130,12 @@ const Content = () => {
     const newSetting = setting.filter(
       (item: any, index: number) => item.alias !== key
     )
-    setSetting(newSetting)
-    localStorage.setItem("setting", JSON.stringify(newSetting))
-  }
 
-  // 快捷搜索
-  const [search, setSearch] = useState("")
+    console.log(newSetting)
+
+    setSetting([...newSetting])
+    localStorage.setItem("setting", JSON.stringify([...newSetting]))
+  }
 
   const onSearch = async () => {
     if (!search) return
@@ -123,28 +152,63 @@ const Content = () => {
     localStorage.setItem("searchTarget", idx)
   }
 
+  // 截图
+  const openCapture = () => {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      console.log("点击了", tabs)
+
+      if (!tabs[0].windowId) return
+      // 详细文档：https://developer.chrome.com/docs/extensions/reference/api/tabs?hl=zh-cn#method-captureVisibleTab
+      chrome.tabs.captureVisibleTab(
+        tabs[0].windowId,
+        { format: "png", quality: 100 },
+        (image) => {
+          if (chrome.runtime.lastError) {
+            console.log("截图失败:", chrome.runtime.lastError)
+          } else {
+            chrome.tabs
+              .sendMessage(tabs[0].id, {
+                base64: image,
+                type: "areaScreenshot"
+              })
+              .catch((error) => {
+                console.log("content-script消息发送失败：", error)
+              })
+          }
+        }
+      )
+      console.log(chrome.tabs.sendMessage, tabs[0].id)
+    })
+
+    // window.close()
+  }
+
   return (
     <div
       style={{
-        width: "380px",
-        minHeight: "280px"
+        width: "400px",
+        minHeight: "340px"
       }}>
-      <header className="text-center text-[16px] text-[#000] font-bold mb-1 pt-2 ">
+      <header className="text-center text-[18px] text-[#000] font-bold  py-2 border-b-[1px] border-[orange]">
         Honeycomb
       </header>
       {/* S 快捷输入框 */}
-      <div className="px-2 pb-3">
-        <p>快捷搜索</p>
-        <div className="w-full  flex justify-between items-center">
+      <div className="px-2 pb-3 mt-2">
+        <p className="text-[#000] text-[14px] font-medium mb-2">快捷搜索</p>
+        <div className="w-full  flex justify-between items-center ">
           <Input
-            value={search}
             onInput={(e) => setSearch(e)}
             placeholder="输入关键字"
-            width={200}
+            width={340}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                onSearch()
+              }
+            }}
           />
           <div>
             <button
-              className="atom-button"
+              className="atom-button--small"
               type="button"
               title="Search"
               onClick={onSearch}>
@@ -159,56 +223,35 @@ const Content = () => {
       {/* E 快捷输入框 */}
 
       {/* S 功能区 */}
-      <div className="menu  h-20 px-4 border-t-[1px] border-[#f4f7f6] flex justify-between items-center pt-2 gap-2">
-        <div className="w-[120px] h-full gap-x-2 gap-y-4 items-center border-r-[1px] border-[#f4f7f6] grid grid-cols-2">
-          <div className="w-[40px] flex justify-center items-center flex-col">
-            {/* 点击截图 */}
-            <button
-              className="atom-button"
-              type="button"
-              title="截图"
-              onClick={async () => {}}>
-              <Icon
-                icon="tabler:screenshot"
-                className=" text-[#00c983] w-[20px] h-[20px]"
-              />
-            </button>
-            {/* 点击截图 */}
-            <p className="w-full text-center mt-1">截图</p>
-          </div>
-          <div className="w-[40px] flex justify-center items-center flex-col">
-            {/* 点击截图 */}
-            <button
-              className="atom-button"
-              type="button"
-              title="设置"
-              onClick={() => openSetting()}>
-              <Icon
-                icon="tabler:settings-star"
-                className=" text-[orange] w-[20px] h-[20px]"
-              />
-            </button>
-            {/* 点击截图 */}
-            <p className="w-full text-center mt-1 text-nowrap">设置</p>
-          </div>
-          <div className="w-[40px] flex justify-center items-center flex-col">
-            {/* 点击截图 */}
-            <button
-              className="atom-button"
-              type="button"
-              title="删除"
-              onClick={() => openDelete()}>
-              <Icon
-                icon="tabler:settings-star"
-                className=" text-[orange] w-[20px] h-[20px]"
-              />
-            </button>
-            {/* 点击截图 */}
-            <p className="w-full text-center mt-1 text-nowrap">删除</p>
-          </div>
+      <div className="menu h-25 px-4 border-t-[1px] border-[#f4f7f6] flex justify-between items-center pt-3 gap-2 overflow-y-auto">
+        <div className="w-[120px] h-25 gap-x-1 gap-y-4 items-center border-r-[1px] border-[#f4f7f6] grid grid-cols-2">
+          {menuList.map((item, index) => {
+            return (
+              <div
+                key={index}
+                className="w-[40px] flex justify-center items-center flex-col">
+                {/* 点击截图 */}
+                <button
+                  className="atom-button--small"
+                  type="button"
+                  title={item.title}
+                  onClick={item.event}>
+                  <Icon
+                    style={{ color: item.iconColor }}
+                    icon={item.icon}
+                    className="w-[20px] h-[20px] "
+                  />
+                </button>
+                {/* 点击截图 */}
+                <p className="w-full text-center mt-1 text-nowrap">
+                  {item.title}
+                </p>
+              </div>
+            )
+          })}
         </div>
 
-        <div className="flex-1 h-full gap-y-2 items-center grid grid-cols-4">
+        <div className="flex-1 h-25 gap-y-2 grid grid-cols-4 items-start">
           {setting.map((item, idx) => {
             return (
               <div
@@ -218,16 +261,16 @@ const Content = () => {
                 <button
                   className={`atom-button--small ${searchTarget === idx.toString() && "active"}`}
                   type="button"
-                  title="搜索"
+                  title="搜索预设"
                   onClick={() => onSetSearchTarget(idx.toString())}>
                   <Icon
-                    icon={icons[idx]}
+                    icon={randomIcon()}
                     className=" text-[orange] w-[20px] h-[20px]"
                   />
                 </button>
                 {/* 点击搜索 */}
                 <p
-                  className={`w-full text-center mt-1 ${searchTarget === idx.toString() && "text-[teal] text-[14px] font-bold"}`}>
+                  className={`w-full text-center mt-1 ${searchTarget === idx.toString() && "text-[orange]  font-bold"}`}>
                   {item.alias}
                 </p>
               </div>
@@ -237,16 +280,28 @@ const Content = () => {
       </div>
       {/* E 功能区 */}
 
+      {/* S 介绍 */}
+      <div
+        className="fixed  bottom-[10px] right-[10px] text-[12px] text-[#818999] cursor-pointer"
+        onClick={() =>
+          chrome.tabs.create({
+            url: "https://linhan.atomnotion.com/"
+          })
+        }>
+        关于 <span className="text-[orange] ">Honeycomb</span>
+      </div>
+      {/* E 介绍 */}
+
       {/* S 设置模态框 */}
       {showModel === "true" && (
         <div className="modal fixed z-[9999] top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-[90%] h-[80%] bg-[#fff] px-[10px] pb-[16px] pt-2 rounded-xl  shadow-2xl">
-          <p className=" text-[14px] font-bold">查询设置</p>
-          <div className="modal-content text-[10px]">
-            <p className="mt-1 pb-1 text-[#818999]">
+          <p className=" text-[14px] font-bold">设置预设</p>
+          <div className="modal-content text-[12px]">
+            <p className="mt-1 pb-1 text-[#818999] text-[10px]">
               可输入支持url参数拼接搜索参数的网址 示例：
             </p>
-            <p className=" w-full text-nowrap">
-              <span className="bg-[orange] p-1 rounded-[6px] text-[teal]">
+            <p className=" w-full text-nowrap mt-1">
+              <span className="bg-[#f4f7f6] p-1 rounded-[6px] ">
                 https://github.com/search?q=搜索值&type=repositories
               </span>
             </p>
@@ -255,7 +310,7 @@ const Content = () => {
             <p className="py-1 text-[#818999]">名称</p>
             <Input
               onInput={(e) => setAlias(e)}
-              placeholder="设置搜索别名"
+              placeholder="设置关键字别名"
               width={100}
             />
           </div>
@@ -303,7 +358,7 @@ const Content = () => {
           <div className="title flex items-center">
             <div className="w-[10%]">名称</div>
             <div className="w-[80%] text-center">规则</div>
-            <div className="w-[10%]">操作</div>
+            <div className="w-[10%] text-end">操作</div>
           </div>
           <div className="list overflow-y-auto h-[54%]">
             {setting.map((item, idx) => {

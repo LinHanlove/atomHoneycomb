@@ -2,7 +2,7 @@
   "name": "honeycomb",
   "displayName": "honeycomb",
   "version": "0.0.1",
-  "description": "A comparison of UI style screenshots based on React and browser plugins",
+  "description": "Honeycomb: Streamline your browsing experience with quick search, cache clearing, screenshot capture, and more — all in one convenient extension.",
   "author": "LinHan",
   "scripts": {
     "dev": "plasmo dev",
@@ -30,11 +30,17 @@
   },
   "manifest": {
     "host_permissions": [
-      "https://*/*"
+      "https://*/*",
+      "<all_urls>"
     ],
     "permissions": [
+      "topSites",
       "scripting",
-      "commands"
+      "activeTab",
+      "tabs",
+      "storage",
+      "<all_urls>",
+      "contextMenus"
     ],
     "commands": {
       "toggle-feature": {

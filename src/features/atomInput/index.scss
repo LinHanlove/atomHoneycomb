@@ -16,16 +16,17 @@ $base-space: 40px;
     border-radius: 8px;
     background-color: $color-bg;
     text-shadow: 1px 1px 0 $color-white;
-    box-shadow: inset 2px 2px 3px $color-shadow, inset -3px -3px 6px $color-white;
     box-sizing: border-box;
     transition: all 0.2s ease-in-out;
-    appearance: none;
     -webkit-appearance: none;
+    border: 1px solid $color-teal;
 
-
+    &:hover {
+      border: 1px solid orange;
+    }
 
     &:focus {
-      box-shadow: inset 1px 1px 2px $color-shadow, inset -1px -1px 2px $color-white;
+      border: 1px solid orange;
     }
   }
 

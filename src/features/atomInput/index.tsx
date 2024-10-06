@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 import cssText from "./index.scss"
 
@@ -9,16 +9,27 @@ export const getStyle = () => {
   return style
 }
 
+interface IAtomInputProps {
+  onInput: (value: string) => void
+  value?: string
+  placeholder?: string
+  width?: number
+  readOnly?: boolean
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void
+}
+
 // 输入框组件
-export const Input = ({
+export const Input: React.FC<IAtomInputProps> = ({
   onInput,
   value = "",
   placeholder = "输入关键字",
   width = 120,
-  readOnly = false
+  readOnly = false,
+  onKeyDown
 }) => {
   const [input, setInput] = useState("")
   const [showClose, setShowClose] = useState(false)
+  const inputRef = useRef(null)
 
   const onInputChange = (value) => {
     setInput(value)
@@ -31,6 +42,7 @@ export const Input = ({
   }
 
   useEffect(() => {
+    inputRef.current?.focus()
     onInputChange(value)
     setShowClose(!!value)
   }, [value])
@@ -45,12 +57,13 @@ export const Input = ({
         <label className="relative">
           <input
             style={{ width: `${width}px` }}
-            className="text-[teal] text-[12px]  py-[4px] pl-[8px] pr-[4px] box-border"
+            className="text-[teal] text-[12px]  py-[4px] pl-[8px] pr-[4px]  "
             type="text"
             placeholder={placeholder}
             onInput={(e) => onInputChange(e.currentTarget.value)}
             value={input}
             readOnly={readOnly}
+            onKeyDown={onKeyDown}
           />
           {showClose && (
             <Icon
