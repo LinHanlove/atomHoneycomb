@@ -10,7 +10,9 @@
     "package": "plasmo package"
   },
   "dependencies": {
+    "@plasmohq/messaging": "^0.6.2",
     "@reduxjs/toolkit": "^2.2.7",
+    "cropperjs": "^1.6.2",
     "plasmo": "0.89.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -39,7 +41,6 @@
       "activeTab",
       "tabs",
       "storage",
-      "<all_urls>",
       "contextMenus"
     ],
     "commands": {

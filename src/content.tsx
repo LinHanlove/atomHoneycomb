@@ -1,31 +1,26 @@
 import Cropper from "cropperjs"
 import type { PlasmoCSConfig } from "plasmo"
+import ReactDOM from "react-dom/client"
 
 import "cropperjs/dist/cropper.css"
-
-import ReactDOM from "react-dom/client"
 
 export const config: PlasmoCSConfig = {
   matches: ["<all_urls>"]
 }
 
-// contentScript.ts
-chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-  console.log("Received message in content script: ", message)
+/**
+ * @function 监听来自popup的消息
+ */
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === "areaScreenshot") {
     areaScreenshot(message.base64)
     return true // 表示消息已被处理，不需要再分发
   }
 })
 
-const infos = {
-  x: 0,
-  y: 0,
-  w: 0,
-  h: 0
-}
-
 const areaScreenshot = (base64) => {
+  console.log("base64---进来啦")
+
   // 查找已经存在的截图容器
   const existingContainer = document.querySelector(".image-container")
   if (existingContainer) {
@@ -33,36 +28,63 @@ const areaScreenshot = (base64) => {
     existingContainer.remove()
   }
 
+  // 截图的内容
+  const cropContext = {
+    x: 0,
+    y: 0,
+    w: 0,
+    h: 0
+  }
+
+  let cropImage = {}
+
+  // 创建截图容器
   const imageContainer = document.createElement("div")
+  imageContainer.className = "image-container"
+  imageContainer.style.position = "fixed"
+  imageContainer.style.top = "0"
+  imageContainer.style.left = "0"
+  imageContainer.style.width = "100%"
+  imageContainer.style.height = "100%"
+  imageContainer.style.backgroundColor = "rgba(0, 0, 0, 0.5)"
+  imageContainer.style.zIndex = "9999"
+
   document.body.appendChild(imageContainer)
-  const root = ReactDOM.createRoot(imageContainer)
-  // const cropper = new Cropper(image_dom, {
-  //   autoCrop: true,
-  //   autoCropArea: 0.8,
-  //   zoomOnTouch: false,
-  //   zoomOnWheel: false,
-  //   movable: false,
-  //   rotatable: false,
-  //   zoomable: false,
-  //   crop(event) {
-  //     const { x, y, width, height } = event.detail
-  //     infos.x = x
-  //     infos.y = y
-  //     infos.w = width
-  //     infos.h = height
-  //   },
-  //   cropend() {
-  //     const crop_image = crop(base64, infos)
-  //     console.log(crop_image, "crop_image")
-  //     // // copy_img_to_clipboard(crop_image);
-  //     // cropper.destroy();
-  //     // image_container.remove();
-  //   }
-  // })
-  root.render(
-    <div className="image-container w-[100vw] h-[100vh] fixed left-0 top-0 z-[9999999999999]">
-      <img src={base64} className="image-box max-w-full" title="截图" />
-    </div>
+  // 创建截图图片
+  const imageDom = document.createElement("img")
+  imageDom.src = base64
+  imageContainer.appendChild(imageDom)
+  // 初始化裁剪器
+  const cropper = new Cropper(imageDom, {
+    autoCrop: true,
+    autoCropArea: 0.8,
+    zoomOnTouch: false,
+    zoomOnWheel: false,
+    movable: false,
+    rotatable: false,
+    zoomable: false,
+    crop(event) {
+      const { x, y, width, height } = event.detail
+      console.log(x, y, width, height, "裁剪框")
+
+      cropContext.x = x
+      cropContext.y = y
+      cropContext.w = width
+      cropContext.h = height
+    },
+    async cropend() {
+      cropImage = await crop(base64, cropContext)
+      console.log(cropImage, "crop_image内容")
+    }
+  })
+
+  // 添加操作按钮组
+  imageContainer.append(
+    createButton({
+      cropper,
+      cropImage,
+      imageContainer
+    })
   )
 }
 
@@ -80,19 +102,20 @@ const crop = (image, opts) => {
     const w = opts.w
     const h = opts.h
     const format = opts.format || "png"
-    const canvas = document.createElement("canvas")
-    canvas.width = w
-    canvas.height = h
-    document.body.append(canvas)
-
     const img = new Image()
     img.onload = () => {
+      const canvas = document.createElement("canvas")
+      canvas.width = w
+      canvas.height = h
+      canvas.style.position = "relative"
       const context = canvas.getContext("2d")
       context.drawImage(img, x, y, w, h, 0, 0, w, h)
       const cropped = canvas.toDataURL(`image/${format}`)
+      document.body.append(canvas)
       canvas.remove()
       resolve(cropped)
     }
+
     img.src = image
   })
 }
@@ -102,6 +125,8 @@ const crop = (image, opts) => {
  * @param image base64
  */
 const copy_img_to_clipboard = async (image) => {
+  console.log(image, "复制进粘贴板")
+
   const storage_data = await chrome.storage.sync.get(["model"])
   const model = storage_data.model || "file"
   // 复制都用户粘贴板中
@@ -124,16 +149,38 @@ const copy_img_to_clipboard = async (image) => {
 }
 
 /**
- * 创建一个dom遮罩层
+ * @function 创建位于截图框下面的功能按钮区域
  */
-function createMask() {
-  const mask = document.createElement("div")
-  // 必须让鼠标指针能够穿透 mask 元素
-  mask.style.pointerEvents = "none"
-  mask.style.background = "rgb(3, 132, 253, 0.22)"
-  mask.style.position = "fixed"
-  mask.style.zIndex = "9999999999999"
-  mask.style.display = "none"
-  document.body.appendChild(mask)
-  return mask
+const createButton = (option) => {
+  const buttonContainer = document.createElement("div")
+  buttonContainer.style.position = "absolute"
+  buttonContainer.style.bottom = "10px"
+  buttonContainer.style.left = "0"
+  buttonContainer.style.width = "100%"
+  buttonContainer.style.zIndex = "99999"
+  const container = ReactDOM.createRoot(buttonContainer)
+  container.render(
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center"
+      }}>
+      <button onClick={() => confirmScreenshot(option)}>截图</button>
+    </div>
+  )
+  return buttonContainer
+}
+
+/**
+ * @function 确认截图
+ */
+const confirmScreenshot = (option) => {
+  console.log(option, "确认截图")
+
+  const { cropImage, cropper, imageContainer } = option
+  if (!cropImage) return
+  copy_img_to_clipboard(cropImage)
+  cropper.destroy()
+  imageContainer.remove()
 }

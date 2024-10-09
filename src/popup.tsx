@@ -5,7 +5,8 @@ import { useEffect, useState } from "react"
 import { useStorage } from "@plasmohq/storage/hook"
 
 import cssText from "~/style.scss"
-import { Input } from "~features/atomInput"
+import { defaultSetting, icons } from "~common"
+import { Input } from "~components/atomInput"
 
 export const config: PlasmoCSConfig = {
   matches: ["<all_urls>"],
@@ -63,19 +64,6 @@ const Content = () => {
     localStorage.getItem("searchTarget") || "0"
   )
 
-  // 图标 各种蜜蜂
-  const icons = [
-    "emojione:honeybee",
-    "noto-v1:honeybee",
-    "twemoji:honeybee",
-    "openmoji:honeybee",
-    "noto:honeybee",
-    "streamline-emojis:honeybee",
-    "emojione-v1:honeybee",
-    "noto-v1:honeybee",
-    "streamline-emojis:ant"
-  ]
-
   // 随机生成图标
   const randomIcon = () => {
     return icons[Math.floor(Math.random() * icons.length)]
@@ -103,7 +91,10 @@ const Content = () => {
     }
   ]
 
-  // 添加快捷搜索
+  /**
+   * @function 添加快捷搜索
+   * @returns
+   */
   const onSubmit = () => {
     const newSetting = {
       alias,
@@ -125,7 +116,40 @@ const Content = () => {
     setSetModel("false")
   }
 
-  // 删除快捷搜索
+  /**
+   * @function 一键导入预设
+   */
+  const onImport = () => {
+    const setting = JSON.parse(localStorage.getItem("setting") || "[]")
+
+    if (setting.length <= 0) {
+      localStorage.setItem("setting", JSON.stringify(defaultSetting))
+      setSetting(defaultSetting)
+      setSetModel("false")
+      return
+    }
+    // 将不包含重复的alias 新设置合并到旧设置中
+    const filterNewSetting = defaultSetting.filter(
+      (i) => !setting.some((item: any) => item.alias === i.alias)
+    )
+    if (!filterNewSetting.length) {
+      alert("没有新的预设可以导入")
+      setSetModel("false")
+    }
+    console.log(filterNewSetting)
+
+    localStorage.setItem(
+      "setting",
+      JSON.stringify([...setting, ...filterNewSetting])
+    )
+    setSetting([...setting, ...filterNewSetting])
+    setSetModel("false")
+  }
+
+  /**
+   * @function 删除快捷搜索
+   * @param key 当前点击的key
+   */
   const onDelete = (key: string) => {
     const newSetting = setting.filter(
       (item: any, index: number) => item.alias !== key
@@ -137,6 +161,10 @@ const Content = () => {
     localStorage.setItem("setting", JSON.stringify([...newSetting]))
   }
 
+  /**
+   * @function 点击搜索
+   * @returns
+   */
   const onSearch = async () => {
     if (!search) return
     const target = setting[parseInt(searchTarget)]
@@ -166,6 +194,9 @@ const Content = () => {
           if (chrome.runtime.lastError) {
             console.log("截图失败:", chrome.runtime.lastError)
           } else {
+            // 发送消息给content-script
+            console.log("截图成功:", image)
+
             chrome.tabs
               .sendMessage(tabs[0].id, {
                 base64: image,
@@ -177,7 +208,6 @@ const Content = () => {
           }
         }
       )
-      console.log(chrome.tabs.sendMessage, tabs[0].id)
     })
 
     // window.close()
@@ -223,13 +253,13 @@ const Content = () => {
       {/* E 快捷输入框 */}
 
       {/* S 功能区 */}
-      <div className="menu h-25 px-4 border-t-[1px] border-[#f4f7f6] flex justify-between items-center pt-3 gap-2 overflow-y-auto">
-        <div className="w-[120px] h-25 gap-x-1 gap-y-4 items-center border-r-[1px] border-[#f4f7f6] grid grid-cols-2">
+      <div className="menu h-[180px] px-4 border-t-[1px] border-[#f4f7f6] flex justify-between  pt-3 gap-2 overflow-y-auto">
+        <div className="w-[120px] h-0  gap-y-2 grid grid-cols-2 items-start  ">
           {menuList.map((item, index) => {
             return (
               <div
                 key={index}
-                className="w-[40px] flex justify-center items-center flex-col">
+                className="w-[40px] h-[50px] flex justify-center items-center flex-col">
                 {/* 点击截图 */}
                 <button
                   className="atom-button--small"
@@ -251,12 +281,12 @@ const Content = () => {
           })}
         </div>
 
-        <div className="flex-1 h-25 gap-y-2 grid grid-cols-4 items-start">
+        <div className="flex-1  h-0 gap-y-2 grid grid-cols-4 items-start pl-4 border-l-[1px] border-[#f4f7f6]">
           {setting.map((item, idx) => {
             return (
               <div
                 key={idx}
-                className="w-[40px] flex justify-center items-center flex-col col-span-1">
+                className="w-[40px] h-[50px] flex justify-center items-center flex-col col-span-1">
                 {/* 点击搜索 */}
                 <button
                   className={`atom-button--small ${searchTarget === idx.toString() && "active"}`}
@@ -285,7 +315,7 @@ const Content = () => {
         className="fixed  bottom-[10px] right-[10px] text-[12px] text-[#818999] cursor-pointer"
         onClick={() =>
           chrome.tabs.create({
-            url: "https://linhan.atomnotion.com/"
+            url: "https://linhan.atomnotion.com/posts/about-honeycomb"
           })
         }>
         关于 <span className="text-[orange] ">Honeycomb</span>
@@ -331,17 +361,31 @@ const Content = () => {
             </div>
           </div>
 
-          <button
-            className="atom-button--small !w-auto !px-2 text-nowrap text-[teal] mx-[auto] mt-3"
-            type="button"
-            title="确定"
-            onClick={async () => onSubmit()}>
-            确定
-            <Icon
-              icon="tabler:settings-star"
-              className=" text-[orange] w-[14px] h-[14px] ml-1"
-            />
-          </button>
+          <div className="w-full flex justify-center items-center mt-5">
+            <button
+              className="atom-button--small !w-auto !px-2 text-nowrap text-[teal] ml-6"
+              type="button"
+              title="确定"
+              onClick={async () => onSubmit()}>
+              确定
+              <Icon
+                icon="tabler:settings-star"
+                className=" text-[orange] w-[14px] h-[14px] ml-1"
+              />
+            </button>
+          </div>
+
+          <div className="title flex items-center justify-end mt-4">
+            <p
+              className="flex items-center text-[#818999] text-[10px] cursor-pointer"
+              onClick={async () => onImport()}>
+              一键导入预设{" "}
+              <Icon
+                icon="mdi:import"
+                className=" text-[orange] w-[14px] h-[14px] ml-1"
+              />
+            </p>
+          </div>
         </div>
       )}
       {/* E 设置模态框 */}
@@ -392,7 +436,7 @@ const Content = () => {
           </div>
 
           <button
-            className="atom-button--small !w-auto !px-2 text-nowrap text-[teal] mx-[auto] mt-2"
+            className="atom-button--small !w-auto !px-2 text-nowrap text-[teal] mx-[auto] mt-5"
             type="button"
             title="确定"
             onClick={() => setShowEditModel("false")}>
