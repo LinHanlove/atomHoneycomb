@@ -41,16 +41,25 @@
       "activeTab",
       "tabs",
       "storage",
-      "contextMenus"
+      "contextMenus",
+      "notifications"
     ],
     "commands": {
-      "toggle-feature": {
+      "open": {
         "suggested_key": {
-          "default": "Ctrl+B",
-          "mac": "Ctrl+B"
+          "default": "Alt+O",
+          "mac": "Alt+O",
+          "windows": "Alt+O"
         },
-        "description": "Toggle feature foo",
-        "global": true
+        "description": "激活扩展"
+      },
+      "areaScreenshot": {
+        "suggested_key": {
+          "default": "Alt+A",
+          "mac": "Alt+A",
+          "windows": "Alt+A"
+        },
+        "description": "区域截图"
       }
     }
   }

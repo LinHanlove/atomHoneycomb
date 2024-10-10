@@ -12,6 +12,7 @@ export const getStyle = () => {
 interface IAtomInputProps {
   onInput: (value: string) => void
   value?: string
+  id?: string
   placeholder?: string
   width?: number
   readOnly?: boolean
@@ -22,6 +23,7 @@ interface IAtomInputProps {
 export const Input: React.FC<IAtomInputProps> = ({
   onInput,
   value = "",
+  id = "",
   placeholder = "输入关键字",
   width = 120,
   readOnly = false,
@@ -56,6 +58,7 @@ export const Input: React.FC<IAtomInputProps> = ({
       <div className="label-box">
         <label className="relative">
           <input
+            id={id}
             style={{ width: `${width}px` }}
             className="text-[teal] text-[12px]  py-[4px] pl-[8px] pr-[4px]  "
             type="text"

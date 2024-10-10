@@ -209,9 +209,15 @@ const Content = () => {
         }
       )
     })
-
-    // window.close()
   }
+
+  useEffect(() => {
+    // 直接使用document对象来获取DOM元素
+    const searchInput = document.getElementById("searchInput")
+    console.log("快捷搜索", searchInput)
+
+    if (searchInput) searchInput.focus()
+  }, [])
 
   return (
     <div
@@ -227,6 +233,7 @@ const Content = () => {
         <p className="text-[#000] text-[14px] font-medium mb-2">快捷搜索</p>
         <div className="w-full  flex justify-between items-center ">
           <Input
+            id="searchInput"
             onInput={(e) => setSearch(e)}
             placeholder="输入关键字"
             width={340}
