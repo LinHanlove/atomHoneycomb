@@ -200,7 +200,8 @@ const Content = () => {
             chrome.tabs
               .sendMessage(tabs[0].id, {
                 base64: image,
-                type: "areaScreenshot"
+                type: "areaScreenshot",
+                origin: "popup"
               })
               .catch((error) => {
                 console.log("content-script消息发送失败：", error)

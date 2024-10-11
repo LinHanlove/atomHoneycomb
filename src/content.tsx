@@ -14,7 +14,6 @@ export const config: PlasmoCSConfig = {
  */
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === "areaScreenshot") {
-    window.close()
     window.focus()
     areaScreenshot(message.base64)
 
@@ -66,6 +65,7 @@ const areaScreenshot = (base64) => {
     zoomOnTouch: false,
     zoomOnWheel: false,
     movable: true, // 允许移动图片
+    responsive: true, // 响应式
     rotatable: false,
     zoomable: true, // 允许缩放图片
     crop: (event) => onCrop(event),
@@ -100,6 +100,7 @@ const areaScreenshot = (base64) => {
         imageContainer
       })
     )
+    setBoundary(cropper)
   }
 
   /**
@@ -110,6 +111,34 @@ const areaScreenshot = (base64) => {
     cropBox = (cropper as any).cropBox as HTMLElement
     cropBox.style.position = "relative"
     disableBrowserEvent()
+  }
+
+  /**
+   * @function 设置操作按钮组位置
+   */
+  const setBoundary = (crop) => {
+    // 获取裁切框数据
+    const cropBoxData = crop.getCropBoxData()
+    // 获取操作按钮组
+    const actionContainer = document.querySelector(
+      ".action-container"
+    ) as HTMLElement
+    // 获取操作按钮组宽度
+    const actionContainerInfo = actionContainer.getClientRects()[0]
+
+    // 如果裁切框位于左侧 且宽度小于操作按钮组宽度，则将操作移动到右侧
+    if (
+      cropBoxData.left < 20 &&
+      cropBoxData.width <= actionContainerInfo.width
+    ) {
+      actionContainer.style.right = `-${actionContainerInfo.width + 20}px`
+      actionContainer.style.left = "auto"
+    }
+    // 如果裁切框位于底部 则将操作移动到顶部
+    if (cropBoxData.top >= window.innerHeight - 50) {
+      actionContainer.style.top = `-${actionContainerInfo.height + 10}px`
+      actionContainer.style.bottom = "auto"
+    }
   }
 }
 
@@ -174,9 +203,9 @@ const copy_img_to_clipboard = async (image) => {
  */
 const createButton = (option) => {
   const buttonContainer = document.createElement("div")
-  buttonContainer.className = "button-container"
+  buttonContainer.className = "action-container"
   buttonContainer.style.position = "absolute"
-  buttonContainer.style.bottom = "-50px"
+  buttonContainer.style.bottom = "-40px"
   buttonContainer.style.right = "0"
   buttonContainer.style.width = "auto"
   buttonContainer.style.height = "32px"
@@ -200,7 +229,7 @@ const createButton = (option) => {
       style={{
         display: "flex",
         alignItems: "center",
-        width: "100%",
+        width: "auto",
         height: "100%"
       }}>
       <Icon
