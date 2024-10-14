@@ -5,6 +5,7 @@ import type { PlasmoCSConfig } from "plasmo"
 import ReactDOM from "react-dom/client"
 
 import "cropperjs/dist/cropper.css"
+import { windowRefresh} from "~utils"
 
 export const config: PlasmoCSConfig = {
   matches: ["<all_urls>"]
@@ -14,13 +15,25 @@ export const config: PlasmoCSConfig = {
  * @function 监听来自popup的消息
  */
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.type === "areaScreenshot") {
+  console.log("收到的消息：", message);
+  const {origin, type } = message
+  
+  if (type === "areaScreenshot") {
     window.focus()
     areaScreenshot(message.base64)
     return true // 表示消息已被处理，不需要再分发
   }
+  // 强制刷新
+  if(origin === "background" && type === "refresh") windowRefresh(window)
 })
 
+
+
+
+/**
+ * @function 区域截图
+ * @param base64 
+ */
 const areaScreenshot = (base64) => {
   // 查找已经存在的截图容器
   const existingContainer = document.querySelector(".image-container")

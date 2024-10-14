@@ -7,6 +7,7 @@ import { useStorage } from "@plasmohq/storage/hook"
 import cssText from "~/style.scss"
 import { defaultSetting, icons } from "~common"
 import { Input } from "~components/atomInput"
+import { openGitHubDev } from "~utils"
 
 export const config: PlasmoCSConfig = {
   matches: ["<all_urls>"],
@@ -76,6 +77,12 @@ const Content = () => {
       icon: "tabler:screenshot",
       iconColor: "#00c983",
       event: () => openCapture()
+    },
+    {
+      title: "githubDev",
+      icon: "line-md:github-loop",
+      iconColor: "",
+      event: () => openGitHubDev()
     },
     {
       title: "设置预设",

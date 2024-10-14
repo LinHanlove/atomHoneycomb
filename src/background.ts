@@ -1,3 +1,5 @@
+import { openGitHubDev } from "~utils";
+
 console.log(chrome.commands.onCommand.addListener);
 
 chrome.commands.onCommand.addListener((command) => {
@@ -6,6 +8,11 @@ chrome.commands.onCommand.addListener((command) => {
   if (command === "areaScreenshot") areaScreenshot();
   // 打开扩展
   if (command === "open") openExtension();
+  // 打开githubDev
+  if (command === "openGitHubDev") openGitHubDev();
+  // 强制刷新
+  if (command === "refresh") sendContentMessage("refresh", "background");
+  
 })
 
 /**
@@ -41,4 +48,28 @@ const areaScreenshot = () =>{
  */
 const openExtension = () => {
   chrome.action.openPopup()
+}
+
+
+/**
+ * @function 通知内容脚本
+ * type 类型
+ * origin 来源
+ * data 数据
+ */
+const sendContentMessage = (type: string, origin: string, data?: any) => {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    console.log("tabs", tabs);
+    
+    if (!tabs[0].windowId) return
+    chrome.tabs
+      .sendMessage(tabs[0].id, {
+        type,
+        origin,
+        data,
+      })
+      .catch((error) => {
+        console.log("content-script消息发送失败：", error)
+        })
+  })
 }
