@@ -14,6 +14,9 @@ importers:
       '@reduxjs/toolkit':
         specifier: ^2.2.7
         version: 2.2.7(react@18.2.0)
+      atom-tools:
+        specifier: ^0.5.91
+        version: 0.5.91
       cropperjs:
         specifier: ^1.6.2
         version: 1.6.2
@@ -1440,6 +1443,10 @@ packages:
     resolution: {integrity: sha512-HGyxoOTYUyCM6stUe6EJgnd4EoewAI7zMdfqO+kGjnlZmBDz/cR5pf8r/cR4Wq60sL/p0IkcjUEEPwS3GFrIyw==}
     engines: {node: '>=8'}
 
+  atom-tools@0.5.91:
+    resolution: {integrity: sha512-yLgysIxD7Z3HzgSuo8ar4s+vzL21sEG8iSEPog96Ja95BgLAreiJUsX1MYj7wcgmA3AZhWKZh/uRL4FCsaF3gg==}
+    engines: {node: ^18.0.0 || >=20.0.0}
+
   axobject-query@3.2.4:
     resolution: {integrity: sha512-aPTElBrbifBU1krmZxGZOlBkslORe7Ll7+BDnI50Wy4LgOt69luMgevkDfTq1O/ZgprooPCtWpjCwKSZw/iZ4A==}
     engines: {node: '>= 0.4'}
@@ -2620,6 +2627,11 @@ packages:
 
   plasmo@0.89.3:
     resolution: {integrity: sha512-rBOv1fbNnhdfsDmI5XAMCvNmPwZsXWdcPU4lLH8I1PqXNDeyXCEJdiCLC+4LvB8V262a2UhHgvPwTW9Au4qAmQ==}
+    hasBin: true
+
+  pnpm@9.12.1:
+    resolution: {integrity: sha512-5aflKkGDoC1ZMQV/eg2/+dXpzjFh4z+miuOSElt5KCqKikcKUd/IoO2GIhRC6y+1cBmwmQ7ST6tRm/DhvFzPxA==}
+    engines: {node: '>=18.12'}
     hasBin: true
 
   postcss-import@15.1.0:
@@ -4872,6 +4884,10 @@ snapshots:
 
   array-union@2.1.0: {}
 
+  atom-tools@0.5.91:
+    dependencies:
+      pnpm: 9.12.1
+
   axobject-query@3.2.4: {}
 
   b4a@1.6.7: {}
@@ -6080,6 +6096,8 @@ snapshots:
       - velocityjs
       - walrus
       - whiskers
+
+  pnpm@9.12.1: {}
 
   postcss-import@15.1.0(postcss@8.4.33):
     dependencies:

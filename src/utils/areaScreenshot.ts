@@ -1,6 +1,6 @@
 import Cropper from "cropperjs"
 import "cropperjs/dist/cropper.css"
-import {  disableBrowserEvent } from "~utils"
+import {  disableBrowserEvent, Log } from "~utils"
 import  {createButton}  from "~components/createButton"
 
 interface IContent{
@@ -97,7 +97,7 @@ const areaScreenshot =  (base64) =>{
    */
   const onCrop = (event) => {
     const { x, y, width, height } = event.detail
-    console.log("监听裁剪--->", x, y, width, height)
+    Log("监听裁剪--->", x, y, width, height)
     cropContext.x = x
     cropContext.y = y
     cropContext.w = width
@@ -109,7 +109,7 @@ const areaScreenshot =  (base64) =>{
    */
   const  onCropend = async() => {
     cropImage = await crop(base64, cropContext)
-    console.log("裁剪结束--->", cropImage)
+    Log("裁剪结束--->", cropImage)
 
     // 删除之前的按钮组
     const actionContainer = document.querySelector(
@@ -192,7 +192,7 @@ const areaScreenshot =  (base64) =>{
 
       img.src = image
       document.body.append(img)
-      console.log("img.src--->", img)
+      Log("img.src--->", img)
     })
   }
 

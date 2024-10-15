@@ -1,6 +1,6 @@
 import type { PlasmoCSConfig } from "plasmo"
 import "cropperjs/dist/cropper.css"
-import { windowRefresh} from "~utils"
+import { Log, windowRefresh} from "~utils"
 import areaScreenshot from "~utils/areaScreenshot"
 
 export const config: PlasmoCSConfig = {
@@ -11,7 +11,7 @@ export const config: PlasmoCSConfig = {
  * @function 监听来自popup的消息
  */
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  console.log("收到的消息：", message,areaScreenshot);
+  Log("收到的消息：",message, sender, sendResponse);
   const {origin, type } = message
   
   if (type === "areaScreenshot") {
@@ -20,6 +20,5 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true // 表示消息已被处理，不需要再分发
   }
   // 强制刷新
-  if(origin === "background" && type === "refresh") windowRefresh(window)
+  if(type === "refresh") windowRefresh(window,chrome)
 })
-

@@ -7,7 +7,7 @@ import { useStorage } from "@plasmohq/storage/hook"
 import cssText from "~/style.scss"
 import { defaultSetting, icons } from "~common"
 import { Input } from "~components/atomInput"
-import { openGitHubDev, windowRefresh } from "~utils"
+import { Log, openGitHubDev, sendContentMessage } from "~utils"
 
 export const config: PlasmoCSConfig = {
   matches: ["<all_urls>"],
@@ -88,7 +88,7 @@ const Content = () => {
       title: "刷新",
       icon: "eos-icons:arrow-rotate",
       iconColor: "",
-      event: () => windowRefresh(window)
+      event: () => sendContentMessage("refresh", "popup")
     },
     {
       title: "设置预设",
@@ -149,7 +149,7 @@ const Content = () => {
       alert("没有新的预设可以导入")
       setSetModel("false")
     }
-    console.log(filterNewSetting)
+    Log(filterNewSetting)
 
     localStorage.setItem(
       "setting",
@@ -168,7 +168,7 @@ const Content = () => {
       (item: any, index: number) => item.alias !== key
     )
 
-    console.log(newSetting)
+    Log(newSetting)
 
     setSetting([...newSetting])
     localStorage.setItem("setting", JSON.stringify([...newSetting]))
@@ -196,7 +196,7 @@ const Content = () => {
   // 截图
   const openCapture = () => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      console.log("点击了", tabs)
+      Log("点击了", tabs)
 
       if (!tabs[0].windowId) return
       // 详细文档：https://developer.chrome.com/docs/extensions/reference/api/tabs?hl=zh-cn#method-captureVisibleTab
@@ -205,10 +205,10 @@ const Content = () => {
         { format: "png", quality: 100 },
         (image) => {
           if (chrome.runtime.lastError) {
-            console.log("截图失败:", chrome.runtime.lastError)
+            Log("截图失败:", chrome.runtime.lastError)
           } else {
             // 发送消息给content-script
-            console.log("截图成功:", image)
+            Log("截图成功:", image)
 
             chrome.tabs
               .sendMessage(tabs[0].id, {
@@ -217,7 +217,7 @@ const Content = () => {
                 origin: "popup"
               })
               .catch((error) => {
-                console.log("content-script消息发送失败：", error)
+                Log("content-script消息发送失败：", error)
               })
           }
         }
@@ -228,7 +228,7 @@ const Content = () => {
   useEffect(() => {
     // 直接使用document对象来获取DOM元素
     const searchInput = document.getElementById("searchInput")
-    console.log("快捷搜索", searchInput)
+    Log("快捷搜索", searchInput)
 
     if (searchInput) searchInput.focus()
   }, [])

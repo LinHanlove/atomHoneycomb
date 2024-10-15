@@ -1,17 +1,17 @@
 
 import ReactDOM from "react-dom/client"
 import { Icon } from "@iconify/react"
-import { copyImgToClipboard, enableBrowserEvent } from "~utils"
+import { copyImgToClipboard, enableBrowserEvent, Log } from "~utils"
 
 
 export const createButton = (option) => {
-  console.log(option, "option");
+  Log(option, "option");
   
   /**
    * @function 确认截图
    */
   const  confirmScreenshot = (option)=> {
-    console.log(option, "确认截图")
+    Log(option, "确认截图")
     const { cropImage } = option
     if (!cropImage) return
     copyImgToClipboard(cropImage)
