@@ -31,8 +31,6 @@ export const windowRefresh = (window: Window,chrome: any) => {
   window.location.reload()
 }
 
-
-
 /**
  * 将图片复制进用户粘贴板
  * @param image base64
@@ -76,6 +74,21 @@ export const enableBrowserEvent = () => {
   document.body.style.overflow = ""
 }
 
+/**
+ * @function 打印日志
+ * @param msg 日志信息
+ * @param other 
+ */
 export const Log = (msg: any,...other) => {
   log.success(msg,...other)
+}
+
+
+/**
+ * @function 跳转到介绍
+ */
+export const openIntroduce = (chrome) => {
+  chrome.tabs.create({
+    url: "https://linhan.atomnotion.com/posts/about-honeycomb"
+  })
 }

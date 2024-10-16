@@ -7,7 +7,7 @@ import { useStorage } from "@plasmohq/storage/hook"
 import cssText from "~/style.scss"
 import { defaultSetting, icons } from "~common"
 import { Input } from "~components/atomInput"
-import { Log, openGitHubDev, sendContentMessage } from "~utils"
+import { Log, openGitHubDev, openIntroduce, sendContentMessage } from "~utils"
 
 export const config: PlasmoCSConfig = {
   matches: ["<all_urls>"],
@@ -334,11 +334,7 @@ const Content = () => {
       {/* S 介绍 */}
       <div
         className="fixed  bottom-[10px] right-[10px] text-[12px] text-[#818999] cursor-pointer"
-        onClick={() =>
-          chrome.tabs.create({
-            url: "https://linhan.atomnotion.com/posts/about-honeycomb"
-          })
-        }>
+        onClick={() =>openIntroduce(chrome)}>
         关于 <span className="text-[orange] ">Honeycomb</span>
       </div>
       {/* E 介绍 */}

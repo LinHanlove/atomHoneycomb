@@ -1,6 +1,29 @@
-import { Log, openGitHubDev, sendContentMessage } from "~utils";
+import { Log, openGitHubDev, openIntroduce, sendContentMessage } from "~utils";
 
-Log(chrome.commands.onCommand.addListener);
+// 右键菜单列表
+const menuList = [
+  {
+    id: "githubDev",
+    title: "githubDev",
+    onclick: function (){
+      return openGitHubDev()
+    }
+  },
+  {
+    id: "refresh",
+    title: "refresh",
+    onclick: function(){
+      return sendContentMessage("refresh", "background")
+    }
+  },
+  {
+    id: "aboutHoneycomb",
+    title: "about honeycomb",
+    onclick: function () {
+      return openIntroduce(chrome)
+    }
+  }
+]
 
 chrome.commands.onCommand.addListener((command) => {
   Log(`Command "${command}" triggered-bg`)
@@ -13,6 +36,23 @@ chrome.commands.onCommand.addListener((command) => {
   // 强制刷新
   if (command === "refresh") sendContentMessage("refresh", "background");
   
+})
+
+
+/**
+ * @function 创建右键菜单
+ */
+menuList.forEach(item => {
+  chrome.contextMenus.create({
+    id: item.id,
+    title: item.title,
+    contexts: ["all"],
+  });
+})
+
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+  const active = menuList.find(item => item.id === info.menuItemId)
+  if(active) active.onclick()
 })
 
 /**
