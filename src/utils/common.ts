@@ -1,11 +1,7 @@
+import type { TYPE } from "~types"
 import { Log } from "./func"
 
-interface ISendMessage{
-  type: string
-  origin: string
-  data?: any
-  chrome?: any
-} 
+
 
 
 /**
@@ -30,7 +26,7 @@ export const sington = (className) =>{
  * origin 来源
  * data 数据
  */
-export const sendMessage = (option:ISendMessage) => {
+export const sendMessage = (option:TYPE.ISendMessage) => {
   const {type, origin, data,chrome} = option 
   return new Promise((resolve,reject) => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -53,7 +49,7 @@ export const sendMessage = (option:ISendMessage) => {
 /**
  * @function 通知popup信息
  */
-export const sendMessageToPopup = (option:ISendMessage) => {
+export const sendMessageToPopup = (option:TYPE.ISendMessage) => {
   const {type, origin, data,chrome} = option 
   return new Promise((resolve,reject) => {
     chrome.runtime.sendMessage({

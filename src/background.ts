@@ -1,4 +1,4 @@
-import { Log, openExtension, openGitHubDev, openIntroduce, quickSearch, sendMessage } from "~utils";
+import { areaScreenshot, Log, openExtension, openGitHubDev, openIntroduce, quickSearch, sendMessage } from "~utils";
 
 // 右键菜单列表
 const menuList = [
@@ -45,7 +45,7 @@ const menuList = [
 chrome.commands.onCommand.addListener((command) => {
   Log(`Command "${command}" triggered-bg`)
   // 区域截图
-  if (command === "areaScreenshot") areaScreenshot();
+  if (command === "areaScreenshot") areaScreenshot(chrome);
   // 打开扩展
   if (command === "open") openExtension(chrome);
   // 打开githubDev
@@ -75,31 +75,5 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
   if(active) active.onclick()
 })
 
-/**
- * @function 区域截图
- */
-const areaScreenshot = () =>{
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    if (!tabs[0].windowId) return
-    chrome.tabs.captureVisibleTab(
-      tabs[0].windowId,
-      { format: "png", quality: 100 },
-      (image) => {
-        if (chrome.runtime.lastError) {
-          Log("截图失败:", chrome.runtime.lastError)
-        } else {
-          chrome.tabs
-            .sendMessage(tabs[0].id, {
-              base64: image,
-              type: "areaScreenshot",
-              origin: "background",
-            })
-            .catch((error) => {
-              Log("content-script消息发送失败：", error)
-            })
-        }
-      }
-    )
-  })
-}
+
 

@@ -7,30 +7,12 @@ import { useStorage } from "@plasmohq/storage/hook"
 import cssText from "~/style.scss"
 import { defaultSetting, icons } from "~common"
 import { Input } from "~components/atomInput"
-import { Log, openGitHubDev, openIntroduce, sendMessage } from "~utils"
-import { log } from "atom-tools"
+import { getLocal, Log, openGitHubDev, openIntroduce, sendMessage, setLocal } from "~utils"
 
 export const config: PlasmoCSConfig = {
   matches: ["<all_urls>"],
   world: "MAIN"
 }
-
-/**
- * @function 监听通知消息
- */
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  const {type,origin} = message
-  log.warning('popup收到消息',message)
-  // 快捷搜索
-  if(type === 'quickSearch' && origin==='background') {
-    sendResponse({
-      setting:localStorage.getItem('setting'),
-      searchTarget:localStorage.getItem('searchTarget')
-    })
-    return true
-  }
-})
-
 
 
 export const getStyle = () => {
@@ -41,23 +23,12 @@ export const getStyle = () => {
 
 const Content = () => {
   // 是否打开设置模态框
-  const [showModel, setSetModel] = useStorage("isShowModel")
+  const [showModel, setSetModel] = useStorage("false")
   // 是否打开修改模态框
   const [showEditModel, setShowEditModel] = useState("false")
 
   // 快捷搜索设置
-  const [setting, setSetting] = useState(
-    JSON.parse(
-      localStorage.getItem("setting") ||
-        JSON.stringify([
-          {
-            alias: "npm",
-            prefix: "https://www.npmjs.com/package/",
-            suffix: ""
-          }
-        ])
-    ) as any
-  )
+  const [setting, setSetting] = useState<any>([])
 
   // 是否展示设置
   const openSetting = () => {
@@ -80,9 +51,7 @@ const Content = () => {
   const [search, setSearch] = useState("")
 
   // 搜索目标
-  const [searchTarget, setSearchTarget] = useState(
-    localStorage.getItem("searchTarget") || "0"
-  )
+  const [searchTarget, setSearchTarget] = useState<string>()
 
   // 随机生成图标
   const randomIcon = () => {
@@ -146,19 +115,31 @@ const Content = () => {
 
     setSetting([...setting, newSetting])
     setSearchTarget(searchTarget)
-    localStorage.setItem("setting", JSON.stringify([...setting, newSetting]))
-    localStorage.setItem("searchTarget", searchTarget)
+    setLocal({
+      key: 'setting',
+      value: JSON.stringify([...setting, newSetting]),
+      chrome
+    })
+    setLocal({
+      key: 'searchTarget',
+      value: searchTarget,
+      chrome
+    })
     setSetModel("false")
   }
 
   /**
    * @function 一键导入预设
    */
-  const onImport = () => {
-    const setting = JSON.parse(localStorage.getItem("setting") || "[]")
+  const onImport =  () => {
+    const setting =[]
 
-    if (setting.length <= 0) {
-      localStorage.setItem("setting", JSON.stringify(defaultSetting))
+    if (!setting.length) {
+      setLocal({
+        key: 'setting',
+        value: JSON.stringify(defaultSetting),
+        chrome
+      })
       setSetting(defaultSetting)
       setSetModel("false")
       return
@@ -172,11 +153,11 @@ const Content = () => {
       setSetModel("false")
     }
     Log(filterNewSetting)
-
-    localStorage.setItem(
-      "setting",
-      JSON.stringify([...setting, ...filterNewSetting])
-    )
+    setLocal({
+      key: 'setting',
+      value: JSON.stringify([...setting, ...filterNewSetting]),
+      chrome
+    })
     setSetting([...setting, ...filterNewSetting])
     setSetModel("false")
   }
@@ -189,11 +170,13 @@ const Content = () => {
     const newSetting = setting.filter(
       (item: any, index: number) => item.alias !== key
     )
-
     Log(newSetting)
-
     setSetting([...newSetting])
-    localStorage.setItem("setting", JSON.stringify([...newSetting]))
+    setLocal({
+      key: 'setting',
+      value: JSON.stringify([...newSetting]),
+      chrome
+    })
   }
 
   /**
@@ -212,7 +195,11 @@ const Content = () => {
   // 设置搜索目标
   const onSetSearchTarget = (idx: string) => {
     setSearchTarget(idx.toString())
-    localStorage.setItem("searchTarget", idx)
+    setLocal({
+      key: 'searchTarget',
+      value: idx.toString(),
+      chrome
+    })
   }
 
   // 截图
@@ -221,7 +208,7 @@ const Content = () => {
       Log("点击了", tabs)
 
       if (!tabs[0].windowId) return
-      // 详细文档：https://developer.chrome.com/docs/extensions/reference/api/tabs?hl=zh-cn#method-captureVisibleTab
+      // 详细文档：https://developer.chrome.google.cn/docs/extensions/reference/api?hl=zh-cn
       chrome.tabs.captureVisibleTab(
         tabs[0].windowId,
         { format: "png", quality: 100 },
@@ -250,8 +237,25 @@ const Content = () => {
   useEffect(() => {
     // 直接使用document对象来获取DOM元素
     const searchInput = document.getElementById("searchInput")
-    Log("快捷搜索", searchInput)
-
+    getLocal({
+      key: 'searchTarget',
+      chrome
+    }).then((res:any)=>{
+      if(!res.searchTarget){
+        setLocal({
+          key: 'searchTarget',
+          value: '0',
+          chrome
+        })
+      }
+      setSearchTarget(res.searchTarget)
+    })
+    getLocal({
+      key: 'setting',
+      chrome
+    }).then((res:any)=>{
+      res.setting && setSetting(JSON.parse(res.setting || []))
+    })
     if (searchInput) searchInput.focus()
   }, [])
 
@@ -325,7 +329,7 @@ const Content = () => {
         </div>
 
         <div className="flex-1  h-0 gap-y-2 grid grid-cols-4 items-start pl-4 border-l-[1px] border-[#f4f7f6]">
-          {setting.map((item, idx) => {
+          {setting.length >0 && setting.map((item, idx) => {
             return (
               <div
                 key={idx}
