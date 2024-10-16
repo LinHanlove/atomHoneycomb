@@ -1,4 +1,6 @@
 import { clearAllCookie, log } from "atom-tools";
+import { window } from '../../node_modules/.pnpm/rxjs@7.8.1/node_modules/rxjs/src/internal/operators/window';
+import { sendMessage, sendMessageToPopup } from "./common";
 
 /**
  * @function 打开githubDev 线上查看github项目
@@ -91,4 +93,50 @@ export const openIntroduce = (chrome) => {
   chrome.tabs.create({
     url: "https://linhan.atomnotion.com/posts/about-honeycomb"
   })
+}
+
+
+/**
+ * @function 打开扩展
+ */
+export const openExtension = (chrome) => {
+  chrome.action.openPopup()
+}
+
+
+/**
+ * @function 快捷搜索
+ */
+export const quickSearch = (chrome) => {
+  sendMessage({ type: "getSelectedText", origin: "background",chrome }).then((query: any) => {
+    if(!query) return
+    sendMessageToPopup({
+      type: "quickSearch",
+      origin: "background",
+      chrome
+    }).then((res: any)=>{
+      console.log('res:', res);
+      
+      const settingList = JSON.parse(res.setting)
+      const searchTargetList = parseInt(res.searchTarget)
+      const querySetting = settingList[searchTargetList]
+      console.log('settingList:', querySetting);
+      openExtension(chrome)
+      chrome.tabs.create({
+        url: `${querySetting.prefix}${query}${querySetting.suffix}`
+      })
+    })
+  })
+}
+
+
+/**
+ * @function 获取页面选择的文字
+ */
+export const getSelectedText = (window) => {
+  if(window.document.selection){
+    return  window.document.selection.createRange().text;
+  }else{
+    return  window.getSelection().toString();
+  }
 }

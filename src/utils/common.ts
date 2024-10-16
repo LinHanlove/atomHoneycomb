@@ -1,5 +1,13 @@
 import { Log } from "./func"
 
+interface ISendMessage{
+  type: string
+  origin: string
+  data?: any
+  chrome?: any
+} 
+
+
 /**
  * @function 将类转换为单例类
  */
@@ -17,24 +25,43 @@ export const sington = (className) =>{
 }
 
 /**
- * @function 通知内容脚本
+ * @function 通知信息
  * type 类型
  * origin 来源
  * data 数据
  */
-export const sendContentMessage = (type: string, origin: string, data?: any) => {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    Log("tabs", tabs);
-    
-    if (!tabs[0].windowId) return
-    chrome.tabs
-      .sendMessage(tabs[0].id, {
-        type,
-        origin,
-        data,
-      })
-      .catch((error) => {
-        Log("content-script消息发送失败：", error)
+export const sendMessage = (option:ISendMessage) => {
+  const {type, origin, data,chrome} = option 
+  return new Promise((resolve,reject) => {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      Log("tabs", tabs);
+      if (!tabs.length) return
+      chrome.tabs
+        .sendMessage(tabs[0].id, {
+          type,
+          origin,
+          data,
+        },(res) => {
+          resolve(res)
         })
+    })
+  })
+  
+}
+
+
+/**
+ * @function 通知popup信息
+ */
+export const sendMessageToPopup = (option:ISendMessage) => {
+  const {type, origin, data,chrome} = option 
+  return new Promise((resolve,reject) => {
+    chrome.runtime.sendMessage({
+      type,
+      origin,
+      data,
+    },(res:any) => {
+      resolve(res)
+    })
   })
 }

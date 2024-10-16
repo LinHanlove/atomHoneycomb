@@ -7,12 +7,31 @@ import { useStorage } from "@plasmohq/storage/hook"
 import cssText from "~/style.scss"
 import { defaultSetting, icons } from "~common"
 import { Input } from "~components/atomInput"
-import { Log, openGitHubDev, openIntroduce, sendContentMessage } from "~utils"
+import { Log, openGitHubDev, openIntroduce, sendMessage } from "~utils"
+import { log } from "atom-tools"
 
 export const config: PlasmoCSConfig = {
   matches: ["<all_urls>"],
   world: "MAIN"
 }
+
+/**
+ * @function 监听通知消息
+ */
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  const {type,origin} = message
+  log.warning('popup收到消息',message)
+  // 快捷搜索
+  if(type === 'quickSearch' && origin==='background') {
+    sendResponse({
+      setting:localStorage.getItem('setting'),
+      searchTarget:localStorage.getItem('searchTarget')
+    })
+    return true
+  }
+})
+
+
 
 export const getStyle = () => {
   const style = document.createElement("style")
@@ -88,7 +107,10 @@ const Content = () => {
       title: "刷新",
       icon: "eos-icons:arrow-rotate",
       iconColor: "",
-      event: () => sendContentMessage("refresh", "popup")
+      event: () => sendMessage({
+        type: "refresh",
+        origin: "popup"
+      })
     },
     {
       title: "设置预设",

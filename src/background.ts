@@ -1,7 +1,21 @@
-import { Log, openGitHubDev, openIntroduce, sendContentMessage } from "~utils";
+import { Log, openExtension, openGitHubDev, openIntroduce, quickSearch, sendMessage } from "~utils";
 
 // 右键菜单列表
 const menuList = [
+  {
+    id: "open",
+    title: "open",
+    onclick: function (){
+      return openExtension(chrome)
+    }
+  },
+  {
+    id: "search",
+    title: "search",
+    onclick: function (){
+      return quickSearch(chrome)
+    }
+  },
   {
     id: "githubDev",
     title: "githubDev",
@@ -13,7 +27,10 @@ const menuList = [
     id: "refresh",
     title: "refresh",
     onclick: function(){
-      return sendContentMessage("refresh", "background")
+      return sendMessage({
+        type: "refresh",
+        origin: "background",
+      })
     }
   },
   {
@@ -30,11 +47,14 @@ chrome.commands.onCommand.addListener((command) => {
   // 区域截图
   if (command === "areaScreenshot") areaScreenshot();
   // 打开扩展
-  if (command === "open") openExtension();
+  if (command === "open") openExtension(chrome);
   // 打开githubDev
   if (command === "openGitHubDev") openGitHubDev();
   // 强制刷新
-  if (command === "refresh") sendContentMessage("refresh", "background");
+  if (command === "refresh") sendMessage({
+    type: "refresh",
+    origin: "background",
+  });
   
 })
 
@@ -83,9 +103,3 @@ const areaScreenshot = () =>{
   })
 }
 
-/**
- * @function 打开扩展
- */
-const openExtension = () => {
-  chrome.action.openPopup()
-}
