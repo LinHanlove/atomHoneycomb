@@ -1,3 +1,5 @@
+import { openExtension, openGitHubDev, openIntroduce, quickSearch, sendMessage } from "~utils"
+
 // 按键图标
 export const icons = [
   "emojione:honeybee",
@@ -68,5 +70,48 @@ export const defaultSetting = [
     alias: "juejin",
     prefix: "https://juejin.cn/search?query=",
     suffix: "&fromSeo=0&fromHistory=0&fromSuggest=0"
+  }
+]
+
+// 右键菜单列表
+export const menuList = [
+  {
+    id: "open",
+    title: "open",
+    onclick: function (){
+      return openExtension(chrome)
+    }
+  },
+  {
+    id: "search",
+    title: "search",
+    onclick: function (){
+      return quickSearch(chrome)
+    }
+  },
+  {
+    id: "githubDev",
+    title: "githubDev",
+    onclick: function (){
+      return openGitHubDev()
+    }
+  },
+  {
+    id: "refresh",
+    title: "refresh",
+    onclick: function(){
+      return sendMessage({
+        type: "refresh",
+        origin: "background",
+        chrome
+      })
+    }
+  },
+  {
+    id: "aboutHoneycomb",
+    title: "about honeycomb",
+    onclick: function () {
+      return openIntroduce(chrome)
+    }
   }
 ]

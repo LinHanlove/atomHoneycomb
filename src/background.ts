@@ -1,46 +1,7 @@
+import { menuList } from "~common";
 import { areaScreenshot, Log, openExtension, openGitHubDev, openIntroduce, quickSearch, sendMessage } from "~utils";
 
-// 右键菜单列表
-const menuList = [
-  {
-    id: "open",
-    title: "open",
-    onclick: function (){
-      return openExtension(chrome)
-    }
-  },
-  {
-    id: "search",
-    title: "search",
-    onclick: function (){
-      return quickSearch(chrome)
-    }
-  },
-  {
-    id: "githubDev",
-    title: "githubDev",
-    onclick: function (){
-      return openGitHubDev()
-    }
-  },
-  {
-    id: "refresh",
-    title: "refresh",
-    onclick: function(){
-      return sendMessage({
-        type: "refresh",
-        origin: "background",
-      })
-    }
-  },
-  {
-    id: "aboutHoneycomb",
-    title: "about honeycomb",
-    onclick: function () {
-      return openIntroduce(chrome)
-    }
-  }
-]
+
 
 chrome.commands.onCommand.addListener((command) => {
   Log(`Command "${command}" triggered-bg`)
@@ -54,6 +15,7 @@ chrome.commands.onCommand.addListener((command) => {
   if (command === "refresh") sendMessage({
     type: "refresh",
     origin: "background",
+    chrome
   });
   
 })
