@@ -7,7 +7,7 @@ import { useStorage } from "@plasmohq/storage/hook"
 import cssText from "~/style.scss"
 import { defaultSetting, icons } from "~common"
 import { Input } from "~components/atomInput"
-import { getLocal, Log, openGitHubDev, openIntroduce, sendMessage, setLocal } from "~utils"
+import { getLocal, Log, notify, openGitHubDev, openIntroduce, sendMessage, setLocal } from "~utils"
 
 export const config: PlasmoCSConfig = {
   matches: ["<all_urls>"],
@@ -78,7 +78,8 @@ const Content = () => {
       iconColor: "",
       event: () => sendMessage({
         type: "refresh",
-        origin: "popup"
+        origin: "popup",
+        chrome
       })
     },
     {
@@ -109,8 +110,12 @@ const Content = () => {
     if (!alias || !prefix) return setSetModel("false")
 
     if (setting.find((item: any) => item.alias === alias)) {
-      alert("别名已存在")
-      return setSetModel("false")
+      notify({
+        message:"别名已存在",
+        chrome
+      }).then(()=>{
+         setSetModel("false")
+      })
     }
 
     setSetting([...setting, newSetting])
@@ -131,8 +136,13 @@ const Content = () => {
   /**
    * @function 一键导入预设
    */
-  const onImport =  () => {
-    const setting =[]
+  const onImport =  async () => {
+    const settingLocal = await getLocal({
+      key: 'setting',
+      chrome
+    }) as any
+
+    const setting = JSON.parse(settingLocal.setting || '[]')
 
     if (!setting.length) {
       setLocal({
@@ -149,8 +159,12 @@ const Content = () => {
       (i) => !setting.some((item: any) => item.alias === i.alias)
     )
     if (!filterNewSetting.length) {
-      alert("没有新的预设可以导入")
-      setSetModel("false")
+      notify({
+        message:"没有新的预设可以导入",
+        chrome
+      }).then(()=>{
+        setSetModel("false")
+      })
     }
     Log(filterNewSetting)
     setLocal({

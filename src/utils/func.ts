@@ -1,11 +1,14 @@
 import { clearAllCookie, log } from "atom-tools";
-import { sendMessage } from "./common";
+import { notify, sendMessage } from "./common";
 
 /**
  * @function 打开githubDev 线上查看github项目
  */
 export const openGitHubDev = () => { 
-  Log('openGitHubDev');
+  notify({
+    message:"启动中请稍后...",
+    chrome
+  })
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     Log(tabs);
     
@@ -30,6 +33,10 @@ export const windowRefresh = (window: Window,chrome: any) => {
   window.sessionStorage.clear()
   clearAllCookie()
   window.location.reload()
+  notify({
+    message:"网页已刷新🥳",
+    chrome
+  })
 }
 
 /**

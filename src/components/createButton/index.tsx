@@ -1,7 +1,7 @@
 
 import ReactDOM from "react-dom/client"
 import { Icon } from "@iconify/react"
-import { copyImgToClipboard, enableBrowserEvent, Log } from "~utils"
+import { copyImgToClipboard, enableBrowserEvent, Log, notify } from "~utils"
 
 
 export const createButton = (option) => {
@@ -16,6 +16,10 @@ export const createButton = (option) => {
     if (!cropImage) return
     copyImgToClipboard(cropImage)
     cancelScreenshot(option)
+    notify({
+      message:"截图已保存至剪贴板",
+      chrome
+    })
   }
 
   /**

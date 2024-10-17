@@ -1,8 +1,9 @@
 import type { TYPE } from "~types"
 import { Log } from "./func"
+import { log, sleep } from 'atom-tools';
 
 
-
+export const icon = require("assets/icon.png")
 
 /**
  * @function 将类转换为单例类
@@ -59,5 +60,37 @@ export const sendMessageToPopup = (option:TYPE.ISendMessage) => {
     },(res:any) => {
       resolve(res)
     })
+  })
+}
+
+/**
+ * @function 通知信息
+ * @param option {message,type,iconUrl}
+ * @returns 
+ */
+export const notify = (option:TYPE.IChromeMessage) =>{
+  const {message,type,iconUrl,chrome,timeout} = option
+  console.log(option);
+  
+  return new Promise((resolve,reject) => {
+    try {
+      chrome.notifications.create(
+        {
+          type:type || "basic",
+          title: "honeycomb",
+          message: message || "honeycomb",
+          iconUrl: iconUrl || icon
+        },(notificationId)=>{
+          sleep(timeout||2000).then(() => {
+            chrome.notifications.clear(notificationId)
+            resolve(notificationId)
+          })
+        }
+      );
+      
+    } catch (error) {
+      log.error(error)
+      reject(error)
+    }
   })
 }

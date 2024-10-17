@@ -11,4 +11,13 @@ export namespace TYPE {
     data?: any
     chrome?: any
   } 
+
+  interface IChromeMessage{
+    type?: 'basic' | 'image' | 'list' | 'progress' // 消息类型 [https://developer.chrome.com/docs/extensions/reference/api/notifications?hl=zh-cn#type-TemplateType]
+    title?: string
+    message: string
+    iconUrl?: string
+    chrome?: any
+    timeout?: number
+  }
 }
