@@ -289,16 +289,16 @@ export const killCsdn = (chrome?:any) =>{
   console.log(location.href.includes(scdnWhiteLink));
   
   if (!location.href.includes(scdnWhiteLink)) return
-  sendMessageRuntime({
-    type: 'lightIcon',
-    origin: 'content',
-    chrome
-  })
   const hideArticleBox = document.querySelector('.hide-article-box') as HTMLElement
   const articleContent = document.querySelector('#article_content') as HTMLElement
   console.log(hideArticleBox, articleContent);
   
   if (hideArticleBox) {
+    sendMessageRuntime({
+      type: 'lightIcon',
+      origin: 'content',
+      chrome
+    })
     hideArticleBox.style.display = 'none'
     articleContent.style.height = 'auto'
   }
@@ -319,3 +319,5 @@ export const lightIcon = (option) => {
     chrome.action.setBadgeText({ text: '' })
   })
 }
+
+

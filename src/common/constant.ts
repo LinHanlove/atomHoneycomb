@@ -39,7 +39,7 @@ export const defaultSetting = [
     prefix: "https://www.baidu.com/s?ie=utf-8&tn=25017023_17_dg&wd=",
     suffix: ""
   },
-  { alias: "npm", prefix: "https://www.npmjs.com/package/", suffix: "" },
+  { alias: "npm", prefix: "https://www.npmjs.com/search?q=", suffix: "" },
   {
     alias: "github",
     prefix: "https://github.com/search?q=",

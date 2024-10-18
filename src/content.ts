@@ -19,7 +19,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (type === "areaScreenshot") {
     window.focus()
     areaScreenshot(message.base64).init()
-    return true // 表示消息已被处理，不需要再分发
+    return true 
   }
   // 强制刷新
   if (type === "refresh") windowRefresh(window, chrome)

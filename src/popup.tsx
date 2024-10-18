@@ -7,7 +7,7 @@ import { useStorage } from "@plasmohq/storage/hook"
 import cssText from "~/style.scss"
 import { defaultSetting, icons } from "~common"
 import { Input } from "~components/atomInput"
-import { getLocal, Log, notify, openGitHubDev, openIntroduce, sendMessage, setLocal } from "~utils"
+import { createTab, getLocal, Log, notify, openGitHubDev, openIntroduce, sendMessage, setLocal } from "~utils"
 
 export const config: PlasmoCSConfig = {
   matches: ["<all_urls>"],
@@ -65,6 +65,12 @@ const Content = () => {
       icon: "tabler:screenshot",
       iconColor: "#00c983",
       event: () => openCapture()
+    },
+    {
+      title: "Json Formatter",
+      icon: "si:json-alt-1-fill",
+      iconColor: "",
+      event: () => createTab(chrome)
     },
     {
       title: "githubDev",
@@ -323,7 +329,7 @@ const Content = () => {
                 className="w-[40px] h-[50px] flex justify-center items-center flex-col">
                 {/* 点击截图 */}
                 <button
-                  className="atom-button--small"
+                  className="atom-button--small !shrink-0"
                   type="button"
                   title={item.title}
                   onClick={item.event}>
@@ -334,9 +340,9 @@ const Content = () => {
                   />
                 </button>
                 {/* 点击截图 */}
-                <p className="w-full text-center mt-1 text-nowrap">
+                <div className="w-[120px] text-center mt-1 text-nowrap truncate">
                   {item.title}
-                </p>
+                </div>
               </div>
             )
           })}
