@@ -81,7 +81,7 @@ export const notify = (option:TYPE.IChromeMessage) =>{
           message: message || "honeycomb",
           iconUrl: iconUrl || icon
         },(notificationId)=>{
-          sleep(timeout||2000).then(() => {
+          sleep(timeout||3000).then(() => {
             chrome.notifications.clear(notificationId)
             resolve(notificationId)
           })

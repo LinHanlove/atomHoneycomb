@@ -1,6 +1,14 @@
-import { openExtension, openGitHubDev, openIntroduce, quickSearch, sendMessage } from "~utils"
+import {
+  openExtension,
+  openGitHubDev,
+  openIntroduce,
+  quickSearch,
+  sendMessage
+} from "~utils"
 
-// 按键图标
+/**
+ * 按键图标
+ */
 export const icons = [
   "emojione:honeybee",
   "noto-v1:honeybee",
@@ -11,18 +19,20 @@ export const icons = [
   "emojione-v1:honeybee",
   "noto-v1:honeybee",
   "streamline-emojis:ant",
-  'emojione:bug',
-  'logos:bugsee',
-  'emojione:spider',
-  'openmoji:butterfly',
-  'emojione:spider-web',
-  'emojione:spouting-whale',
+  "emojione:bug",
+  "logos:bugsee",
+  "emojione:spider",
+  "openmoji:butterfly",
+  "emojione:spider-web",
+  "emojione:spouting-whale",
   "emojione:whale",
   "emojione:octopus",
-  "emojione:crab",
+  "emojione:crab"
 ]
 
-// 默认配置
+/**
+ * 默认配置
+ */
 export const defaultSetting = [
   {
     alias: "baidu",
@@ -73,33 +83,35 @@ export const defaultSetting = [
   }
 ]
 
-// 右键菜单列表
+/**
+ * 右键菜单列表
+ */
 export const menuList = [
   {
     id: "open",
     title: "open",
-    onclick: function (){
+    onclick: function () {
       return openExtension(chrome)
     }
   },
   {
     id: "search",
     title: "search",
-    onclick: function (){
+    onclick: function () {
       return quickSearch(chrome)
     }
   },
   {
     id: "githubDev",
     title: "githubDev",
-    onclick: function (){
+    onclick: function () {
       return openGitHubDev()
     }
   },
   {
     id: "refresh",
     title: "refresh",
-    onclick: function(){
+    onclick: function () {
       return sendMessage({
         type: "refresh",
         origin: "background",
@@ -113,5 +125,71 @@ export const menuList = [
     onclick: function () {
       return openIntroduce(chrome)
     }
+  }
+]
+
+/**
+ * 安全页面重定向列表
+ */
+export const safePages = [
+  {
+    name: "CSDN",
+    url: "link.csdn.net",
+    handlers: [
+      {
+        type: "forward",
+        start: "target="
+      }
+    ]
+  },
+  {
+    name: "掘金",
+    url: "link.juejin.cn",
+    handlers: [
+      {
+        type: "forward",
+        start: "target="
+      }
+    ]
+  },
+  {
+    name: "简书",
+    url: "jianshu.com/go-wild?ac=2",
+    handlers: [
+      {
+        type: "forward",
+        start: "url="
+      }
+    ]
+  },
+  {
+    name: "知乎",
+    url: "link.zhihu.com",
+    handlers: [
+      {
+        type: "forward",
+        start: "target="
+      }
+    ]
+  },
+  {
+    name: "开源中国",
+    url: "oschina.net/action/GoToLink",
+    handlers: [
+      {
+        type: "forward",
+        start: "url="
+      }
+    ]
+  },
+  {
+    name: "码云",
+    url: "gitee.com/link",
+    handlers: [
+      {
+        type: "forward",
+        start: "target="
+      }
+    ]
   }
 ]

@@ -1,40 +1,47 @@
-import { clearAllCookie, log } from "atom-tools";
-import { notify, sendMessage } from "./common";
+import { clearAllCookie, log } from "atom-tools"
+
+import { safePages } from "~common"
+import { Message } from "~components/message"
+
+import { notify, sendMessage, sendMessageToPopup } from "./common"
 
 /**
  * @function 打开githubDev 线上查看github项目
  */
-export const openGitHubDev = () => { 
+export const openGitHubDev = () => {
   notify({
-    message:"启动中请稍后...",
+    message: "启动中请稍后...",
     chrome
   })
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    Log(tabs);
-    
+    Log(tabs)
+
     const url = tabs[0].url
     const reg = /^(https?:\/\/)?(www\.)?github\.com\/(.*)\/(.*)/
-    Log('github地址---->', url);
-    
-    if(!reg.test(url)) return
+    Log("github地址---->", url)
+
+    if (!reg.test(url)) return
 
     // 在当前标签页后面打开新的标签页
-    chrome.tabs.create({ url: url.replace('github.com', 'github.dev'),index: tabs[0].index + 1 })
+    chrome.tabs.create({
+      url: url.replace("github.com", "github.dev"),
+      index: tabs[0].index + 1
+    })
   })
 }
 
 /**
  * @function 强制刷新
  */
-export const windowRefresh = (window: Window,chrome: any) => {
-  Log('windowRefresh',window,chrome);
-  
+export const windowRefresh = (window: Window, chrome: any) => {
+  Log("windowRefresh", window, chrome)
+
   window.localStorage.clear()
   window.sessionStorage.clear()
   clearAllCookie()
   window.location.reload()
   notify({
-    message:"网页已刷新🥳",
+    message: "网页已刷新🥳",
     chrome
   })
 }
@@ -83,16 +90,16 @@ export const enableBrowserEvent = () => {
 /**
  * @function 打印日志
  * @param msg 日志信息
- * @param other 
+ * @param other
  */
-export const Log = (msg: any,...other) => {
-  log.success(msg,...other)
+export const Log = (msg: any, ...other) => {
+  log.success(msg, ...other)
 }
 
 /**
  * @function 区域截图
  */
-export const areaScreenshot = (chrome) =>{
+export const areaScreenshot = (chrome) => {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (!tabs[0].windowId) return
     chrome.tabs.captureVisibleTab(
@@ -106,7 +113,7 @@ export const areaScreenshot = (chrome) =>{
             .sendMessage(tabs[0].id, {
               base64: image,
               type: "areaScreenshot",
-              origin: "background",
+              origin: "background"
             })
             .catch((error) => {
               Log("content-script消息发送失败：", error)
@@ -117,7 +124,6 @@ export const areaScreenshot = (chrome) =>{
   })
 }
 
-
 /**
  * @function 跳转到介绍
  */
@@ -127,56 +133,62 @@ export const openIntroduce = (chrome) => {
   })
 }
 
-
 /**
  * @function 打开扩展
  */
 export const openExtension = (chrome) => {
   return new Promise((resolve, reject) => {
-    chrome.action.openPopup().then(()=>{
+    chrome.action.openPopup().then(() => {
       resolve(null)
     })
   })
 }
 
-
 /**
  * @function 快捷搜索
  */
-export const quickSearch =  (chrome) => {
-  sendMessage({ type: "getSelectedText", origin: "background",chrome }).then(async (query: any) => {
-    if(!query) return
-    const settingLocal = await getLocal({
-      key: 'setting',
-      chrome
-    }) as any
-    const searchTargetLocal = await getLocal({
-      key: 'searchTarget',
-      chrome
-    }) as {
-      searchTarget: string
+export const quickSearch = (chrome) => {
+  sendMessage({ type: "getSelectedText", origin: "background", chrome }).then(
+    async (query: any) => {
+      if (!query) return
+      const settingLocal = (await getLocal({
+        key: "setting",
+        chrome
+      })) as any
+      const searchTargetLocal = (await getLocal({
+        key: "searchTarget",
+        chrome
+      })) as {
+        searchTarget: string
+      }
+      console.log(
+        "settingList:",
+        settingLocal.setting,
+        "searchTarget:",
+        searchTargetLocal
+      )
+
+      if (!settingLocal.setting || !searchTargetLocal) return
+      const querySetting = JSON.parse(settingLocal.setting)[
+        parseInt(searchTargetLocal.searchTarget)
+      ]
+      console.log("querySetting:", querySetting)
+
+      chrome.tabs.create({
+        url: `${querySetting.prefix}${query}${querySetting.suffix}`
+      })
     }
-    console.log('settingList:', settingLocal.setting, 'searchTarget:', searchTargetLocal);
-
-    if(!settingLocal.setting || !searchTargetLocal) return
-    const querySetting = JSON.parse(settingLocal.setting)[parseInt(searchTargetLocal.searchTarget)]
-    console.log('querySetting:', querySetting);
-    
-    chrome.tabs.create({
-      url: `${querySetting.prefix}${query}${querySetting.suffix}`
-    })
-  })
+  )
 }
-
 
 /**
  * @function 获取页面选择的文字
  */
 export const getSelectedText = (window) => {
-  if(window.document.selection){
-    return  window.document.selection.createRange().text;
-  }else{
-    return  window.getSelection().toString();
+  if (window.document.selection) {
+    return window.document.selection.createRange().text
+  } else {
+    return window.getSelection().toString()
   }
 }
 
@@ -184,7 +196,7 @@ export const getSelectedText = (window) => {
  * @function 存储数据
  */
 export const setLocal = (option) => {
-  const {chrome, key, value} = option
+  const { chrome, key, value } = option
   return new Promise((resolve, reject) => {
     chrome.storage.local.set({ [key]: value }, (res) => {
       resolve(res)
@@ -192,12 +204,11 @@ export const setLocal = (option) => {
   })
 }
 
-
 /**
  * @function 读取数据
  */
 export const getLocal = (option) => {
-  const {chrome, key} = option
+  const { chrome, key } = option
   return new Promise((resolve, reject) => {
     chrome.storage.local.get(key, (res) => {
       resolve(res)
@@ -209,10 +220,47 @@ export const getLocal = (option) => {
  * @function 清空数据
  */
 export const clearLocal = (option) => {
-  const {chrome, key} = option
+  const { chrome, key } = option
   return new Promise((resolve, reject) => {
     chrome.storage.local.remove(key, (res) => {
       resolve(res)
     })
   })
+}
+
+/**
+ * @function 消除网站安全页面跳转限制
+ */
+export const interceptLink = (chrome?: any) => {
+  // @match        *://link.juejin.cn/*
+  // @match        *://juejin.cn/*
+  // @match        *://www.jianshu.com/p/*
+  // @match        *://www.jianshu.com/go-wild?*
+  // @match        *://*.zhihu.com/*
+  // @match        *://tieba.baidu.com/*
+  // @match        *://*.oschina.net/*
+  // @match        *://gitee.com/*
+  // @match        *://leetcode.cn/link/*
+  // @match        *://blog.51cto.com/*
+  // @match        *://*.baidu.com/*
+  for (let safePage of safePages) {
+    if (!location.href.includes(safePage.url)) continue
+    // 清除网站弹窗
+    while (document.body.firstChild) {
+      document.body.removeChild(document.body.firstChild)
+    }
+    for (let handler of safePage.handlers) {
+      // 处理跳转
+      document.body.append(
+        Message({
+          title: "honeycomb提醒您！正在跳转...",
+          subTitle: decodeURIComponent(location.href.split(handler.start)[1])
+        })
+      )
+      location.replace(
+        decodeURIComponent(location.href.split(handler.start)[1])
+      )
+      return
+    }
+  }
 }
