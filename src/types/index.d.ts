@@ -28,3 +28,10 @@ export namespace TYPE {
     h: number
   }
 }
+
+
+declare module 'plasmo' {
+  export interface PlasmoCSConfig {
+    
+  }
+}
