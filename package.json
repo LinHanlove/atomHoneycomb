@@ -41,6 +41,7 @@
       "topSites",
       "scripting",
       "activeTab",
+      "action",
       "tabs",
       "storage",
       "contextMenus",

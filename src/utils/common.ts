@@ -48,9 +48,9 @@ export const sendMessage = (option:TYPE.ISendMessage) => {
 
 
 /**
- * @function 通知popup信息
+ * @function 通知{popup,background}信息
  */
-export const sendMessageToPopup = (option:TYPE.ISendMessage) => {
+export const sendMessageRuntime = (option:TYPE.ISendMessage) => {
   const {type, origin, data,chrome} = option 
   return new Promise((resolve,reject) => {
     chrome.runtime.sendMessage({

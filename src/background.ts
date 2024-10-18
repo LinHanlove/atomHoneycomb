@@ -1,6 +1,7 @@
 import { menuList } from "~common"
 import {
   areaScreenshot,
+  lightIcon,
   Log,
   notify,
   openExtension,
@@ -39,6 +40,11 @@ chrome.commands.onCommand.addListener((command) => {
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   Log("background收到的消息：", message, sender, sendResponse)
   const { origin, type, data } = message
+  if (origin === "content") {
+    if (type === "lightIcon") lightIcon({
+      chrome,
+    })
+  }
 })
 
 /**

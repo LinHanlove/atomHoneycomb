@@ -2,7 +2,7 @@ import type { PlasmoCSConfig } from "plasmo"
 
 import "cropperjs/dist/cropper.css"
 
-import { getSelectedText, interceptLink, Log, windowRefresh } from "~utils"
+import { getSelectedText, interceptLink, killCsdn, Log, windowRefresh } from "~utils"
 import areaScreenshot from "~utils/areaScreenshot"
 
 export const config: PlasmoCSConfig = {
@@ -35,3 +35,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
  * @function 取消外链的默认行为
  */
 interceptLink(chrome)
+
+
+/**
+ * @function scdn默认打开内容，不需要点击关注
+ */
+killCsdn(chrome)

@@ -2,13 +2,7 @@ import Cropper from "cropperjs"
 import "cropperjs/dist/cropper.css"
 import {  disableBrowserEvent, Log } from "~utils"
 import  {createButton}  from "~components/createButton"
-
-interface IContent{
-  x: number,
-  y: number,
-  w: number,
-  h: number
-}
+import type { TYPE } from "~types"
 
 /**
  * @class 区域截图
@@ -16,7 +10,7 @@ interface IContent{
 const areaScreenshot =  (base64) =>{
 
   // 截图内容
-  const cropContext = {} as IContent
+  const cropContext = {} as TYPE.IContent
   // 截图
   let cropImage:any
   // 网页截图容器

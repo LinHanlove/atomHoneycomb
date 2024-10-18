@@ -1,9 +1,9 @@
-import { clearAllCookie, log } from "atom-tools"
+import { clearAllCookie, log, sleep } from "atom-tools"
 
 import { safePages } from "~common"
 import { Message } from "~components/message"
 
-import { notify, sendMessage, sendMessageToPopup } from "./common"
+import { notify, sendMessage, sendMessageRuntime } from "./common"
 
 /**
  * @function 打开githubDev 线上查看github项目
@@ -11,6 +11,11 @@ import { notify, sendMessage, sendMessageToPopup } from "./common"
 export const openGitHubDev = () => {
   notify({
     message: "启动中请稍后...",
+    chrome
+  })
+  sendMessageRuntime({
+    type: 'lightIcon',
+    origin: 'content',
     chrome
   })
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -243,8 +248,14 @@ export const interceptLink = (chrome?: any) => {
   // @match        *://leetcode.cn/link/*
   // @match        *://blog.51cto.com/*
   // @match        *://*.baidu.com/*
+
   for (let safePage of safePages) {
     if (!location.href.includes(safePage.url)) continue
+    sendMessageRuntime({
+      type: 'lightIcon',
+      origin: 'content',
+      chrome
+    })
     // 清除网站弹窗
     while (document.body.firstChild) {
       document.body.removeChild(document.body.firstChild)
@@ -263,4 +274,48 @@ export const interceptLink = (chrome?: any) => {
       return
     }
   }
+}
+
+
+/**
+ * @function 消除csdn一些垃圾限制
+ * @description 经过分析发现，点击关注展开其实只是样式层面上的隐藏，
+ * 所以找到对应类名修改样式就可以了
+ * 按钮class【hide-article-box hide-article-pos text-center】
+ * 内容id【article_content】
+ */
+export const killCsdn = (chrome?:any) =>{
+  const scdnWhiteLink = 'https://blog.csdn.net/'
+  console.log(location.href.includes(scdnWhiteLink));
+  
+  if (!location.href.includes(scdnWhiteLink)) return
+  sendMessageRuntime({
+    type: 'lightIcon',
+    origin: 'content',
+    chrome
+  })
+  const hideArticleBox = document.querySelector('.hide-article-box') as HTMLElement
+  const articleContent = document.querySelector('#article_content') as HTMLElement
+  console.log(hideArticleBox, articleContent);
+  
+  if (hideArticleBox) {
+    hideArticleBox.style.display = 'none'
+    articleContent.style.height = 'auto'
+  }
+}
+
+/**
+ * @function 点亮徽标
+ */
+export const lightIcon = (option) => {
+  const { chrome,color,text,textColor } = option
+  console.log(chrome.action, color,text,textColor );
+  chrome.action.setBadgeText({ text: text || '🐝' })
+  chrome.action.setBadgeTextColor({ color: textColor || '#fff' })
+  chrome.action.setBadgeBackgroundColor({ color:color || '#fff' })
+
+  // 5秒后关闭
+  sleep(5000).then(() => {
+    chrome.action.setBadgeText({ text: '' })
+  })
 }

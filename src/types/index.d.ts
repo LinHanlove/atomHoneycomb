@@ -20,4 +20,11 @@ export namespace TYPE {
     chrome?: any
     timeout?: number
   }
+
+  interface IContent{
+    x: number,
+    y: number,
+    w: number,
+    h: number
+  }
 }

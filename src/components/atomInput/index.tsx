@@ -72,7 +72,7 @@ export const Input: React.FC<IAtomInputProps> = ({
             <Icon
               icon="carbon:close-filled"
               onClick={() => onClose()}
-              className=" text-[orange] w-[12px] h-[12px] absolute top-0 right-1 z-[999]"
+              className=" text-[#ffa500] w-[12px] h-[12px] absolute top-0 right-1 z-[999]"
             />
           )}
         </label>
