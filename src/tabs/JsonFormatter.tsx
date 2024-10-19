@@ -116,7 +116,7 @@ export default function JsonFormatter() {
         <div className="mb-1 text-[orange]">
           <a
             title="使用文档"
-            href="https://linhan.atomnotion.com/posts/about-honeycomb"
+            href="https://linhan.atomnotion.com/posts/about-Atom Honeycomb"
             target="_blank"
             rel="noopener noreferrer">
             使用文档

@@ -1,4 +1,5 @@
 import {
+  createTab,
   openExtension,
   openGitHubDev,
   openIntroduce,
@@ -109,6 +110,16 @@ export const menuList = [
     }
   },
   {
+    id: "jsonFormatter",
+    title: "jsonFormatter",
+    onclick: function () {
+      return createTab({
+        chrome,
+        url: "JsonFormatter"
+      })
+    }
+  },
+  {
     id: "refresh",
     title: "refresh",
     onclick: function () {
@@ -120,8 +131,8 @@ export const menuList = [
     }
   },
   {
-    id: "aboutHoneycomb",
-    title: "about honeycomb",
+    id: "aboutAtom Honeycomb",
+    title: "about Atom Honeycomb",
     onclick: function () {
       return openIntroduce(chrome)
     }

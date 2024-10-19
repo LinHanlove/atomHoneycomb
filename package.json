@@ -1,8 +1,8 @@
 {
-  "name": "honeycomb",
-  "displayName": "honeycomb",
+  "name": "Atom Honeycomb",
+  "displayName": "Atom Honeycomb",
   "version": "0.0.1",
-  "description": "Honeycomb: Streamline your browsing experience with quick search, cache clearing, screenshot capture, and more — all in one convenient extension.",
+  "description": "Atom Honeycomb: Streamline your browsing experience with quick search, cache clearing, screenshot capture, and more — all in one convenient extension.",
   "author": "LinHan",
   "scripts": {
     "dev": "plasmo dev",

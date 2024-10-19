@@ -5,16 +5,26 @@ import { useEffect, useState } from "react"
 import { useStorage } from "@plasmohq/storage/hook"
 
 import cssText from "~/assets/style/base.scss"
+
 import "~/assets/style/tailwind.css"
+
 import { defaultSetting, icons } from "~common"
 import { Input } from "~components/atomInput"
-import { createTab, getLocal, Log, notify, openGitHubDev, openIntroduce, sendMessage, setLocal } from "~utils"
+import {
+  createTab,
+  getLocal,
+  Log,
+  notify,
+  openGitHubDev,
+  openIntroduce,
+  sendMessage,
+  setLocal
+} from "~utils"
 
 export const config: PlasmoCSConfig = {
   matches: ["<all_urls>"],
   world: "MAIN"
 }
-
 
 export const getStyle = () => {
   const style = document.createElement("style")
@@ -71,10 +81,11 @@ const Content = () => {
       title: "Json Formatter",
       icon: "si:json-alt-1-fill",
       iconColor: "",
-      event: () => createTab({
-        chrome,
-        url:'JsonFormatter'
-      })
+      event: () =>
+        createTab({
+          chrome,
+          url: "JsonFormatter"
+        })
     },
     {
       title: "githubDev",
@@ -86,11 +97,12 @@ const Content = () => {
       title: "刷新",
       icon: "eos-icons:arrow-rotate",
       iconColor: "",
-      event: () => sendMessage({
-        type: "refresh",
-        origin: "popup",
-        chrome
-      })
+      event: () =>
+        sendMessage({
+          type: "refresh",
+          origin: "popup",
+          chrome
+        })
     },
     {
       title: "设置预设",
@@ -121,22 +133,22 @@ const Content = () => {
 
     if (setting.find((item: any) => item.alias === alias)) {
       notify({
-        message:"别名已存在",
+        message: "别名已存在",
         chrome
-      }).then(()=>{
-         setSetModel("false")
+      }).then(() => {
+        setSetModel("false")
       })
     }
 
     setSetting([...setting, newSetting])
     setSearchTarget(searchTarget)
     setLocal({
-      key: 'setting',
+      key: "setting",
       value: JSON.stringify([...setting, newSetting]),
       chrome
     })
     setLocal({
-      key: 'searchTarget',
+      key: "searchTarget",
       value: searchTarget,
       chrome
     })
@@ -146,17 +158,17 @@ const Content = () => {
   /**
    * @function 一键导入预设
    */
-  const onImport =  async () => {
-    const settingLocal = await getLocal({
-      key: 'setting',
+  const onImport = async () => {
+    const settingLocal = (await getLocal({
+      key: "setting",
       chrome
-    }) as any
+    })) as any
 
-    const setting = JSON.parse(settingLocal.setting || '[]')
+    const setting = JSON.parse(settingLocal.setting || "[]")
 
     if (!setting.length) {
       setLocal({
-        key: 'setting',
+        key: "setting",
         value: JSON.stringify(defaultSetting),
         chrome
       })
@@ -170,15 +182,15 @@ const Content = () => {
     )
     if (!filterNewSetting.length) {
       notify({
-        message:"没有新的预设可以导入",
+        message: "没有新的预设可以导入",
         chrome
-      }).then(()=>{
+      }).then(() => {
         setSetModel("false")
       })
     }
     Log(filterNewSetting)
     setLocal({
-      key: 'setting',
+      key: "setting",
       value: JSON.stringify([...setting, ...filterNewSetting]),
       chrome
     })
@@ -197,7 +209,7 @@ const Content = () => {
     Log(newSetting)
     setSetting([...newSetting])
     setLocal({
-      key: 'setting',
+      key: "setting",
       value: JSON.stringify([...newSetting]),
       chrome
     })
@@ -220,7 +232,7 @@ const Content = () => {
   const onSetSearchTarget = (idx: string) => {
     setSearchTarget(idx.toString())
     setLocal({
-      key: 'searchTarget',
+      key: "searchTarget",
       value: idx.toString(),
       chrome
     })
@@ -262,22 +274,22 @@ const Content = () => {
     // 直接使用document对象来获取DOM元素
     const searchInput = document.getElementById("searchInput")
     getLocal({
-      key: 'searchTarget',
+      key: "searchTarget",
       chrome
-    }).then((res:any)=>{
-      if(!res.searchTarget){
+    }).then((res: any) => {
+      if (!res.searchTarget) {
         setLocal({
-          key: 'searchTarget',
-          value: '0',
+          key: "searchTarget",
+          value: "0",
           chrome
         })
       }
       setSearchTarget(res.searchTarget)
     })
     getLocal({
-      key: 'setting',
+      key: "setting",
       chrome
-    }).then((res:any)=>{
+    }).then((res: any) => {
       res.setting && setSetting(JSON.parse(res.setting || []))
     })
     if (searchInput) searchInput.focus()
@@ -290,7 +302,7 @@ const Content = () => {
         minHeight: "340px"
       }}>
       <header className="text-center text-[18px] text-[#000] font-bold  py-2 border-b-[1px] border-[orange]">
-        Honeycomb
+        Atom Honeycomb
       </header>
       {/* S 快捷输入框 */}
       <div className="px-2 pb-3 mt-2">
@@ -353,30 +365,31 @@ const Content = () => {
         </div>
 
         <div className="flex-1  h-0 gap-y-2 grid grid-cols-4 items-start pl-4 border-l-[1px] border-[#f4f7f6]">
-          {setting.length >0 && setting.map((item, idx) => {
-            return (
-              <div
-                key={idx}
-                className="w-[40px] h-[50px] flex justify-center items-center flex-col col-span-1">
-                {/* 点击搜索 */}
-                <button
-                  className={`atom-button--small ${searchTarget === idx.toString() && "active"}`}
-                  type="button"
-                  title="搜索预设"
-                  onClick={() => onSetSearchTarget(idx.toString())}>
-                  <Icon
-                    icon={randomIcon()}
-                    className=" text-[orange] w-[20px] h-[20px]"
-                  />
-                </button>
-                {/* 点击搜索 */}
-                <p
-                  className={`w-full text-center mt-1 ${searchTarget === idx.toString() && "text-[orange]  font-bold"}`}>
-                  {item.alias}
-                </p>
-              </div>
-            )
-          })}
+          {setting.length > 0 &&
+            setting.map((item, idx) => {
+              return (
+                <div
+                  key={idx}
+                  className="w-[40px] h-[50px] flex justify-center items-center flex-col col-span-1">
+                  {/* 点击搜索 */}
+                  <button
+                    className={`atom-button--small ${searchTarget === idx.toString() && "active"}`}
+                    type="button"
+                    title="搜索预设"
+                    onClick={() => onSetSearchTarget(idx.toString())}>
+                    <Icon
+                      icon={randomIcon()}
+                      className=" text-[orange] w-[20px] h-[20px]"
+                    />
+                  </button>
+                  {/* 点击搜索 */}
+                  <p
+                    className={`w-full text-center mt-1 ${searchTarget === idx.toString() && "text-[orange]  font-bold"}`}>
+                    {item.alias}
+                  </p>
+                </div>
+              )
+            })}
         </div>
       </div>
       {/* E 功能区 */}
@@ -384,8 +397,8 @@ const Content = () => {
       {/* S 介绍 */}
       <div
         className="fixed  bottom-[10px] right-[10px] text-[12px] text-[#818999] cursor-pointer"
-        onClick={() =>openIntroduce(chrome)}>
-        关于 <span className="text-[orange] ">Honeycomb</span>
+        onClick={() => openIntroduce(chrome)}>
+        关于 <span className="text-[orange] ">Atom Honeycomb</span>
       </div>
       {/* E 介绍 */}
 

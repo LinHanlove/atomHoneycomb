@@ -14,8 +14,8 @@ export const openGitHubDev = () => {
     chrome
   })
   sendMessageRuntime({
-    type: 'lightIcon',
-    origin: 'content',
+    type: "lightIcon",
+    origin: "content",
     chrome
   })
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -134,7 +134,7 @@ export const areaScreenshot = (chrome) => {
  */
 export const openIntroduce = (chrome) => {
   chrome.tabs.create({
-    url: "https://linhan.atomnotion.com/posts/about-honeycomb"
+    url: "https://linhan.atomnotion.com/posts/about-Atom Honeycomb"
   })
 }
 
@@ -252,8 +252,8 @@ export const interceptLink = (chrome?: any) => {
   for (let safePage of safePages) {
     if (!location.href.includes(safePage.url)) continue
     sendMessageRuntime({
-      type: 'lightIcon',
-      origin: 'content',
+      type: "lightIcon",
+      origin: "content",
       chrome
     })
     // 清除网站弹窗
@@ -264,7 +264,7 @@ export const interceptLink = (chrome?: any) => {
       // 处理跳转
       document.body.append(
         Message({
-          title: "honeycomb提醒您！正在跳转...",
+          title: "Atom Honeycomb提醒您！正在跳转...",
           subTitle: decodeURIComponent(location.href.split(handler.start)[1])
         })
       )
@@ -276,7 +276,6 @@ export const interceptLink = (chrome?: any) => {
   }
 }
 
-
 /**
  * @function 消除csdn一些垃圾限制
  * @description 经过分析发现，点击关注展开其实只是样式层面上的隐藏，
@@ -284,23 +283,27 @@ export const interceptLink = (chrome?: any) => {
  * 按钮class【hide-article-box hide-article-pos text-center】
  * 内容id【article_content】
  */
-export const killCsdn = (chrome?:any) =>{
-  const scdnWhiteLink = 'https://blog.csdn.net/'
-  console.log(location.href.includes(scdnWhiteLink));
-  
+export const killCsdn = (chrome?: any) => {
+  const scdnWhiteLink = "https://blog.csdn.net/"
+  console.log(location.href.includes(scdnWhiteLink))
+
   if (!location.href.includes(scdnWhiteLink)) return
-  const hideArticleBox = document.querySelector('.hide-article-box') as HTMLElement
-  const articleContent = document.querySelector('#article_content') as HTMLElement
-  console.log(hideArticleBox, articleContent);
-  
+  const hideArticleBox = document.querySelector(
+    ".hide-article-box"
+  ) as HTMLElement
+  const articleContent = document.querySelector(
+    "#article_content"
+  ) as HTMLElement
+  console.log(hideArticleBox, articleContent)
+
   if (hideArticleBox) {
     sendMessageRuntime({
-      type: 'lightIcon',
-      origin: 'content',
+      type: "lightIcon",
+      origin: "content",
       chrome
     })
-    hideArticleBox.style.display = 'none'
-    articleContent.style.height = 'auto'
+    hideArticleBox.style.display = "none"
+    articleContent.style.height = "auto"
   }
 }
 
@@ -308,16 +311,14 @@ export const killCsdn = (chrome?:any) =>{
  * @function 点亮徽标
  */
 export const lightIcon = (option) => {
-  const { chrome,color,text,textColor } = option
-  console.log(chrome.action, color,text,textColor );
-  chrome.action.setBadgeText({ text: text || '🐝' })
-  chrome.action.setBadgeTextColor({ color: textColor || '#fff' })
-  chrome.action.setBadgeBackgroundColor({ color:color || '#fff' })
+  const { chrome, color, text, textColor } = option
+  console.log(chrome.action, color, text, textColor)
+  chrome.action.setBadgeText({ text: text || "🐝" })
+  chrome.action.setBadgeTextColor({ color: textColor || "#fff" })
+  chrome.action.setBadgeBackgroundColor({ color: color || "#fff" })
 
   // 5秒后关闭
   sleep(5000).then(() => {
-    chrome.action.setBadgeText({ text: '' })
+    chrome.action.setBadgeText({ text: "" })
   })
 }
-
-
