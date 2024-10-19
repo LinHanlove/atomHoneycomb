@@ -134,7 +134,7 @@ export const areaScreenshot = (chrome) => {
  */
 export const openIntroduce = (chrome) => {
   chrome.tabs.create({
-    url: "https://linhan.atomnotion.com/posts/about-Atom Honeycomb"
+    url: "https://linhan.atomnotion.com/posts/about-atomHoneycomb"
   })
 }
 
