@@ -60,12 +60,6 @@ importers:
       postcss:
         specifier: 8.4.33
         version: 8.4.33
-      prettier:
-        specifier: ^3.3.3
-        version: 3.3.3
-      pretty-print-json:
-        specifier: ^3.0.3
-        version: 3.0.3
       typescript:
         specifier: 5.3.3
         version: 5.3.3
@@ -2807,9 +2801,6 @@ packages:
     resolution: {integrity: sha512-i2tDNA0O5IrMO757lfrdQZCc2jPNDVntV0m/+4whiDfWaTKfMNgR7Qz0NAeGz/nRqF4m5/6CLzbP4/liHt12Ew==}
     engines: {node: '>=14'}
     hasBin: true
-
-  pretty-print-json@3.0.3:
-    resolution: {integrity: sha512-uIL9/fr5dGV80BDrbN9HWBegwyuN0hCOHA+3EsysnusuQDlhBu6w7dPNm+hBCRiL7Up0jwfGgPX3Ngu/iQ0a8A==}
 
   process@0.11.10:
     resolution: {integrity: sha512-cdGef/drWFoydD1JsMzuFf8100nZl+GT+yacc2bEced5f9Rjk4z+WtFUTBu9PhOi9j/jfmBPu0mMEY4wIdAF8A==}
@@ -6387,8 +6378,6 @@ snapshots:
       tunnel-agent: 0.6.0
 
   prettier@3.3.3: {}
-
-  pretty-print-json@3.0.3: {}
 
   process@0.11.10: {}
 

@@ -33,16 +33,16 @@ export namespace TYPE {
   }
 
   // json formatter
-  interface IJsonFormatterOption {
-    /* 可选的 replacer 参数，用于选择键 */
-    replacer?: (key: string, value: any) => any | any[]
-    /* 可选的 space 参数，用于缩进 */
-    space?: string | number
-    /* 可选的 limit 参数，用于限制缩进的深度 */
-    limit?: number
-    /* 格式化后key是否需要引号 */
-    keyIsNeedQuote?: boolean
+  interface IFormatOption {
+    indent: number // 缩进空格数
+    lineNumbers: boolean // 是否用 <ol> 标签包裹 HTML 以支持行号
+    linkUrls: boolean // 是否为URL创建锚点标签
+    linksNewTab: boolean // 是否给锚点标签添加 target=_blank 属性
+    quoteKeys: boolean // 是否总是为键名使用双引号
+    trailingCommas: boolean // 是否在数组和对象的最后一个项目后追加逗号
   }
+  type FormatOptions = Partial<TYPE.IFormatOption>
+  type JsonType = "key" | "string" | "number" | "boolean" | "null" | "mark"
 }
 
 declare module "plasmo" {

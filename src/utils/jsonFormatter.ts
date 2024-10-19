@@ -1,158 +1,123 @@
 import type { TYPE } from "~types"
 
 /**
- * JSON格式化函数
- * stringify 方法接受一个值和一个可选的 replacer，以及一个可选的空间参数，并返回一个 JSON 文本。
- * @param {any} value 需要格式化的值
- * @param {TYPE.IJsonFormatterOption} option 可选的配置参数
- * @returns {string} 格式化后的 JSON 字符串
+ * @function jsonFormatter
+ * @description 将JSON数据转换为HTML字符串。
+ * @param data JSON数据
+ * @param options 格式化选项
+ * @returns
  */
-export const formatter = (value, option?: TYPE.IJsonFormatterOption) => {
+export const jsonFormatter = (
+  data: unknown,
+  options?: TYPE.FormatOptions
+): string => {
   const {
-    replacer = null,
-    space = 2,
-    limit = 0,
-    keyIsNeedQuote = false
-  } = option || {}
-  // 定义一个正则表达式，用于匹配需要转义的字符
-  const regEscapable =
-    /[\\\"\u0000-\u001f\u007f-\u009f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g
+    indent = 2,
+    lineNumbers = false,
+    linkUrls = true,
+    linksNewTab = true,
+    quoteKeys = false,
+    trailingCommas = true
+  } = options
 
-  // 定义一个变量 gap，用于存储缩进字符串
-  let gap = ""
-  // 存储缩进字符串
-  let indent = ""
+  // 将JSON转换为HTML。
+  const invalidHtml = /[<>&]|\\"/g
 
-  // 字符替换表
-  const meta = {
-    "\b": "\\b",
-    "\t": "\\t",
-    "\n": "\\n",
-    "\f": "\\f",
-    "\r": "\\r",
-    '"': '\\"',
-    "\\": "\\\\"
+  const jsonLine = /^( *)("[^"]+": )?("[^"]*"|[\w.+-]*)?([{}[\],]*)?$/gm
+  // 正则表达式解析JSON字符串的每一行到四个部分：
+  //    捕获组         部分        描述                    例子
+  //    ----------------  ----------  ---------------------------  ------------------
+  //    ( *)                p1: indent  缩进空格                '   '
+  //    ("[^"]+": )         p2: key     键名                    '"active": '
+  //    ("[^"]*"|[\w.+-]*)  p3: value   键值                    'true'
+  //    ([{}[\],]*)         p4: end     行终止字符              ','
+  // 例如，'   "active": true,' 被解析为：['   ', '"active": ', 'true', ',']
+
+  // 将特殊字符转换为HTML实体。
+  const toHtml = (char: string) =>
+    char === "<"
+      ? "&lt;"
+      : char === ">"
+        ? "&gt;"
+        : char === "&"
+          ? "&amp;"
+          : "&bsol;&quot;" // 转义的引号: \"
+
+  const spanTag = (type: TYPE.JsonType, display?: string): string =>
+    // 创建类似于 "<span class=json-boolean>true</span>" 的HTML。
+    display ? "<span class=json-" + type + ">" + display + "</span>" : ""
+
+  /**
+   * @function buildValueHtml
+   * @description 分析一个值并返回类似于 "<span class=json-number>3.1415</span>" 的HTML。
+   * @param value JSON值
+   * @returns
+   */
+  const buildValueHtml = (value: string): string => {
+    // 分析一个值并返回类似于 "<span class=json-number>3.1415</span>" 的HTML。
+    const strType = /^"/.test(value) && "string"
+    const boolType = ["true", "false"].includes(value) && "boolean"
+    const nullType = value === "null" && "null"
+    const type = boolType || nullType || strType || "number"
+    const urlPattern = /https?:\/\/[^\s"]+/g
+    const target = linksNewTab ? " target=_blank" : ""
+    const makeLink = (link: string) =>
+      `<a class=json-link href="${link}"${target}>${link}</a>`
+    const display =
+      strType && linkUrls ? value.replace(urlPattern, makeLink) : value
+    return spanTag(type, display)
   }
 
-  // 如果 limit 参数不是一个数字，则抛出错误
-  if (typeof limit !== "number")
-    throw new Error("formatter: limit 必须是一个数字")
-
-  // 如果 space 参数是一个数字，则创建一个包含该数量空格的缩进字符串
-  // 如果 space 参数是一个字符串，则将其用作缩进字符串
-  if (typeof space === "number") indent = " ".repeat(space)
-  if (typeof space === "string") indent = space
-
-  // 如果 replacer 参数不是一个函数或数组，则抛出错误
-  if (
-    replacer &&
-    typeof replacer !== "function" &&
-    (typeof replacer !== "object" || typeof replacer.length !== "number")
-  )
-    throw new Error("formatter: 错误的 replacer 参数")
-
-  // 引号函数，用于将字符串安全地转换为 JSON 字符串
-  const quote = (string) => {
-    // 如果字符串中没有控制字符、引号字符和反斜杠字符，则可以直接添加引号
-    // 否则，必须将这些字符替换为安全的转义序列
-    regEscapable.lastIndex = 0
-    return regEscapable.test(string)
-      ? `"${string.replace(regEscapable, (a) => {
-          const key = meta[a]
-          return typeof key === "string"
-            ? key
-            : `\\u${("0000" + a.charCodeAt(0).toString(16)).slice(-4)}`
-        })}"`
-      : `"${string}"`
-  }
-
-  // keyTranslateStr 函数，用于将对象的键转换为字符串
-  const keyTranslateStr = (key, holder, limit) => {
-    console.log("---->>", key, holder, limit)
-
-    let value = holder[key]
-    // 如果值有 toJSON 方法，则调用它以获得替代值
-    if (
-      value &&
-      typeof value === "object" &&
-      typeof value.toJSON === "function"
-    )
-      value = value.toJSON(key)
-
-    // 如果我们使用 replacer 函数调用，则调用 replacer 以获得替代值
-    if (typeof replacer === "function")
-      value = replacer.call(holder, key, value)
-
-    // 下一步取决于值的类型
-    switch (typeof value) {
-      case "string":
-        return quote(value)
-      case "number":
-        return isFinite(value) ? String(value) : "null"
-      case "boolean":
-      case "null":
-        return String(value)
-      case "object":
-        if (!value) return "null"
-        gap += indent
-        const partial = []
-        // 值是否是数组？
-        if (Array.isArray(value)) {
-          // 如果是数组，则遍历数组中的每个元素
-          for (let i = 0; i < value.length; i++) {
-            partial.push(keyTranslateStr(i, value, limit) || "null")
-          }
-          // 如果 limit 参数大于 0，则递归调用 formatter 函数以格式化数组
-          const values =
-            partial.length === 0
-              ? "[]"
-              : gap
-                ? gap.length + partial.join(",").length + 4 > limit
-                  ? `[\n${gap}${partial.join(",\n" + gap)}\n${gap.slice(0, -indent.length)}]`
-                  : `[ ${partial.join(", ")} ]`
-                : `[${partial.join(",")}]`
-          gap = gap.slice(0, -indent.length)
-          return values
-        }
-
-        // 如果 replacer 是数组，使用它来选择要字符串化的成员
-        if (replacer && typeof replacer === "object") {
-          for (let i = 0; i < replacer.length; i++) {
-            const k = replacer[i]
-            if (typeof k === "string") {
-              const v = keyTranslateStr(k, value, limit)
-              if (v)
-                partial.push(
-                  `${keyIsNeedQuote ? k : quote(k)}` + (gap ? ": " : ":") + v
-                )
-            }
-          }
-        } else {
-          // 否则，遍历对象中的所有键
-          for (const k in value) {
-            if (Object.prototype.hasOwnProperty.call(value, k)) {
-              const v = keyTranslateStr(k, value, limit)
-              if (v)
-                partial.push(
-                  `${keyIsNeedQuote ? k : quote(k)}` + (gap ? ": " : ":") + v
-                )
-            }
-          }
-        }
-        // 将所有成员文本连接在一起，用逗号分隔，并用大括号包裹
-        const str =
-          partial.length === 0
-            ? "{}"
-            : gap
-              ? gap.length + partial.join(",").length + 4 > limit
-                ? `{\n${gap}${partial.join(",\n" + gap)}\n${gap.slice(0, -indent.length)}}`
-                : `{ ${partial.join(", ")} }`
-              : `{${partial.join(",")}}`
-        gap = gap.slice(0, -indent.length)
-        return str
+  /**
+   * @function buildLineHtml
+   * @description 将JSON字符串的每一行转换为HTML。
+   * @param match JSON字符串的每一行
+   * @param parts 捕获组（缩进，键，值，结束）
+   * @returns
+   */
+  const replacer = (match: string, ...parts: string[]): string => {
+    // 将四个括号捕获组（缩进，键，值，结束）转换为HTML。
+    const part = {
+      indent: parts[0],
+      key: parts[1],
+      value: parts[2],
+      end: parts[3]
     }
+    const findName = quoteKeys ? /(.*)(): / : /"([\w$]+)": |(.*): /
+    const indentHtml = part.indent || ""
+    const keyName = part.key && part.key.replace(findName, "$1$2")
+    const keyHtml = part.key
+      ? spanTag("key", keyName) + spanTag("mark", ": ")
+      : ""
+    const valueHtml = part.value ? buildValueHtml(part.value) : ""
+    const noComma = !part.end || ["]", "}"].includes(match.at(-1)!)
+    const addComma = trailingCommas && match.at(0) === " " && noComma
+    const endHtml = spanTag(
+      "mark",
+      addComma ? (part.end ?? "") + "," : part.end
+    )
+    return indentHtml + keyHtml + valueHtml + endHtml
   }
 
-  // 创建一个假的根对象，其中包含我们的值，键为 ''
-  return keyTranslateStr("", { "": value }, limit)
+  // 将JSON转换为HTML。
+  const json = JSON.stringify(data, null, indent) || "undefined"
+
+  // 将特殊字符转换为HTML实体。
+  const html = json.replace(invalidHtml, toHtml).replace(jsonLine, replacer)
+
+  // 将HTML包裹在 <pre> 标签中。
+  const makeLine = (line: string): string => `   <li class=json-li>${line}</li>`
+
+  // 用 <ol> 标签包裹 HTML。
+  const addLineNumbers = (
+    html: string
+  ): string => // 用 <ol> 标签包裹 HTML
+    [
+      "<ol class=json-lines style='list-style:auto !important;'>",
+      ...html.split("\n").map(makeLine),
+      "</ol>"
+    ].join("\n")
+
+  // 返回HTML。
+  return lineNumbers ? addLineNumbers(html) : html
 }
