@@ -4,7 +4,8 @@ import { useEffect, useState } from "react"
 
 import { useStorage } from "@plasmohq/storage/hook"
 
-import cssText from "~/style.scss"
+import cssText from "~/assets/style/base.scss"
+import "~/assets/style/tailwind.css"
 import { defaultSetting, icons } from "~common"
 import { Input } from "~components/atomInput"
 import { createTab, getLocal, Log, notify, openGitHubDev, openIntroduce, sendMessage, setLocal } from "~utils"
@@ -70,7 +71,10 @@ const Content = () => {
       title: "Json Formatter",
       icon: "si:json-alt-1-fill",
       iconColor: "",
-      event: () => createTab(chrome)
+      event: () => createTab({
+        chrome,
+        url:'JsonFormatter'
+      })
     },
     {
       title: "githubDev",
