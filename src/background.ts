@@ -1,6 +1,7 @@
 import { menuList } from "~common"
 import {
   areaScreenshot,
+  createTab,
   lightIcon,
   Log,
   notify,
@@ -18,8 +19,12 @@ chrome.commands.onCommand.addListener((command) => {
   Log(`Command "${command}" triggered-bg`)
   // 区域截图
   if (command === "areaScreenshot") areaScreenshot(chrome)
-  // 打开扩展
-  if (command === "open") openExtension(chrome)
+  // jsonFormatter
+  if (command === "jsonFormatter")
+    createTab({
+      chrome,
+      url: "JsonFormatter"
+    })
   // 打开githubDev
   if (command === "openGitHubDev") openGitHubDev()
   // 强制刷新
@@ -41,9 +46,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   Log("background收到的消息：", message, sender, sendResponse)
   const { origin, type, data } = message
   if (origin === "content") {
-    if (type === "lightIcon") lightIcon({
-      chrome,
-    })
+    if (type === "lightIcon")
+      lightIcon({
+        chrome
+      })
   }
 })
 

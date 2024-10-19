@@ -47,13 +47,13 @@
       "notifications"
     ],
     "commands": {
-      "open": {
+      "jsonFormatter": {
         "suggested_key": {
-          "default": "Alt+O",
-          "mac": "Alt+O",
-          "windows": "Alt+O"
+          "default": "Alt+J",
+          "mac": "Alt+J",
+          "windows": "Alt+J"
         },
-        "description": "激活扩展"
+        "description": "Json Formatter"
       },
       "openGitHubDev": {
         "suggested_key": {
