@@ -2,7 +2,7 @@
   "name": "Atom Honeycomb",
   "displayName": "Atom Honeycomb",
   "version": "0.0.1",
-  "description": "Atom Honeycomb: Streamline your browsing experience with quick search, cache clearing, screenshot capture, and more — all in one convenient extension.",
+  "description": "Develop more efficient and aesthetically pleasing browser plugins",
   "author": "LinHan",
   "scripts": {
     "dev": "plasmo dev",
@@ -14,6 +14,7 @@
     "@reduxjs/toolkit": "^2.2.7",
     "atom-tools": "^0.5.91",
     "cropperjs": "^1.6.2",
+    "dlx": "^0.2.1",
     "html2canvas": "^1.4.1",
     "plasmo": "0.89.3",
     "react": "18.2.0",
@@ -79,7 +80,6 @@
         },
         "description": "区域截图"
       }
-    },
-    "$schema": "https://raw.githubusercontent.com/PlasmoHQ/bpp/v3/keys.schema.json"
+    }
   }
 }

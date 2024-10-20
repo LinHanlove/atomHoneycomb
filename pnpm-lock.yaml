@@ -20,12 +20,15 @@ importers:
       cropperjs:
         specifier: ^1.6.2
         version: 1.6.2
+      dlx:
+        specifier: ^0.2.1
+        version: 0.2.1
       html2canvas:
         specifier: ^1.4.1
         version: 1.4.1
       plasmo:
         specifier: 0.89.3
-        version: 0.89.3(@swc/core@1.7.36(@swc/helpers@0.5.13))(@swc/helpers@0.5.13)(lodash@4.17.21)(postcss@8.4.33)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 0.89.3(@swc/core@1.7.36(@swc/helpers@0.5.13))(@swc/helpers@0.5.13)(lodash@4.17.21)(postcss@8.4.33)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(underscore@1.13.7)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -1848,6 +1851,9 @@ packages:
   dlv@1.1.3:
     resolution: {integrity: sha512-+HlytyjlPKnIG8XuRG8WvmBP8xs8P71y+SKKS6ZXWoEgLuePxtDoUEiH7WkdePWrQ5JBpE6aoVqfZfJUQkjXwA==}
 
+  dlx@0.2.1:
+    resolution: {integrity: sha512-oXRVvaKG942UX0HNIDr+Eykp6uGhcjkk719dGBYNqSagrwZ0l4ryA4iTh2n/l23MinmXISqzt4uVLSS2cUYm7A==}
+
   dom-serializer@1.4.1:
     resolution: {integrity: sha512-VHwB3KfrcOOkelEG2ZOfxqLZdfkil8PtJi4P8N2MMXucZq2yLp75ClViUlOVwyoHEDjYU433Aq+5zWP61+RGag==}
 
@@ -3200,6 +3206,9 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
+  underscore@1.13.7:
+    resolution: {integrity: sha512-GMXzWtsc57XAtguZgaQViUOzs0KTkk8ojr3/xAxXLITqf/3EMwxC0inyETfDFjH/Krbhuep0HNbbjI9i/q3F3g==}
+
   undici-types@5.26.5:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
 
@@ -4376,13 +4385,14 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
-  '@plasmohq/consolidate@0.17.0(lodash@4.17.21)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@plasmohq/consolidate@0.17.0(lodash@4.17.21)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(underscore@1.13.7)':
     dependencies:
       bluebird: 3.7.2
     optionalDependencies:
       lodash: 4.17.21
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+      underscore: 1.13.7
 
   '@plasmohq/init@0.7.0': {}
 
@@ -4408,7 +4418,7 @@ snapshots:
     transitivePeerDependencies:
       - '@parcel/core'
 
-  '@plasmohq/parcel-config@0.41.1(@swc/core@1.7.36(@swc/helpers@0.5.13))(@swc/helpers@0.5.13)(lodash@4.17.21)(postcss@8.4.33)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.2.2)':
+  '@plasmohq/parcel-config@0.41.1(@swc/core@1.7.36(@swc/helpers@0.5.13))(@swc/helpers@0.5.13)(lodash@4.17.21)(postcss@8.4.33)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.2.2)(underscore@1.13.7)':
     dependencies:
       '@parcel/compressor-raw': 2.9.3(@parcel/core@2.9.3)
       '@parcel/config-default': 2.9.3(@parcel/core@2.9.3)(@swc/helpers@0.5.13)(postcss@8.4.33)(typescript@5.2.2)
@@ -4444,7 +4454,7 @@ snapshots:
       '@plasmohq/parcel-transformer-inline-css': 0.3.11
       '@plasmohq/parcel-transformer-manifest': 0.20.1
       '@plasmohq/parcel-transformer-svelte': 0.6.0
-      '@plasmohq/parcel-transformer-vue': 0.5.0(lodash@4.17.21)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@plasmohq/parcel-transformer-vue': 0.5.0(lodash@4.17.21)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(underscore@1.13.7)
     transitivePeerDependencies:
       - '@swc/core'
       - '@swc/helpers'
@@ -4626,7 +4636,7 @@ snapshots:
       '@parcel/utils': 2.9.3
       svelte: 4.2.2
 
-  '@plasmohq/parcel-transformer-vue@0.5.0(lodash@4.17.21)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@plasmohq/parcel-transformer-vue@0.5.0(lodash@4.17.21)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(underscore@1.13.7)':
     dependencies:
       '@parcel/core': 2.9.3
       '@parcel/diagnostic': 2.9.3
@@ -4634,7 +4644,7 @@ snapshots:
       '@parcel/source-map': 2.1.1
       '@parcel/types': 2.9.3(@parcel/core@2.9.3)
       '@parcel/utils': 2.9.3
-      '@plasmohq/consolidate': 0.17.0(lodash@4.17.21)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@plasmohq/consolidate': 0.17.0(lodash@4.17.21)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(underscore@1.13.7)
       '@vue/compiler-sfc': 3.3.4
       nullthrows: 1.1.1
       semver: 7.5.4
@@ -5395,6 +5405,10 @@ snapshots:
       path-type: 4.0.0
 
   dlv@1.1.3: {}
+
+  dlx@0.2.1:
+    dependencies:
+      underscore: 1.13.7
 
   dom-serializer@1.4.1:
     dependencies:
@@ -6208,7 +6222,7 @@ snapshots:
 
   pirates@4.0.6: {}
 
-  plasmo@0.89.3(@swc/core@1.7.36(@swc/helpers@0.5.13))(@swc/helpers@0.5.13)(lodash@4.17.21)(postcss@8.4.33)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+  plasmo@0.89.3(@swc/core@1.7.36(@swc/helpers@0.5.13))(@swc/helpers@0.5.13)(lodash@4.17.21)(postcss@8.4.33)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(underscore@1.13.7):
     dependencies:
       '@expo/spawn-async': 1.7.2
       '@parcel/core': 2.9.3
@@ -6216,7 +6230,7 @@ snapshots:
       '@parcel/package-manager': 2.9.3(@parcel/core@2.9.3)
       '@parcel/watcher': 2.2.0
       '@plasmohq/init': 0.7.0
-      '@plasmohq/parcel-config': 0.41.1(@swc/core@1.7.36(@swc/helpers@0.5.13))(@swc/helpers@0.5.13)(lodash@4.17.21)(postcss@8.4.33)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.2.2)
+      '@plasmohq/parcel-config': 0.41.1(@swc/core@1.7.36(@swc/helpers@0.5.13))(@swc/helpers@0.5.13)(lodash@4.17.21)(postcss@8.4.33)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.2.2)(underscore@1.13.7)
       '@plasmohq/parcel-core': 0.1.9
       buffer: 6.0.3
       chalk: 5.3.0
@@ -6807,6 +6821,8 @@ snapshots:
   typescript@5.2.2: {}
 
   typescript@5.3.3: {}
+
+  underscore@1.13.7: {}
 
   undici-types@5.26.5: {}
 
