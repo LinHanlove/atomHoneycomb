@@ -98,6 +98,12 @@ export default function JsonFormatter() {
     }
   }, [data, action, indent, jsonContainer])
 
+  useEffect(() => {
+    // 直接使用document对象来获取DOM元素
+    const Input = document.getElementById("json-input-area")
+    if (Input) Input.focus()
+  }, [])
+
   return (
     <>
       <h2 className="title text-center text-2xl font-bold py-4">
@@ -129,6 +135,7 @@ export default function JsonFormatter() {
             <h3 className="text-xl font-bold py-2">Input:</h3>
             <div className="input-area">
               <textarea
+                id="json-input-area"
                 title="json-input-area"
                 className="w-full h-[70vh] p-2 border-2 border-gray-200 rounded-lg resize-none"
                 inputMode="text"
