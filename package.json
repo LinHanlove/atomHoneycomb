@@ -1,6 +1,6 @@
 {
   "name": "Atom Honeycomb",
-  "displayName": "Atom Honeycomb",
+  "displayName": "honeycomb",
   "version": "0.0.1",
   "description": "Develop more efficient and aesthetically pleasing browser plugins",
   "author": "LinHan",
@@ -14,8 +14,6 @@
     "@reduxjs/toolkit": "^2.2.7",
     "atom-tools": "^0.5.91",
     "cropperjs": "^1.6.2",
-    "dlx": "^0.2.1",
-    "html2canvas": "^1.4.1",
     "plasmo": "0.89.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
