@@ -22,7 +22,8 @@ jobs:
           [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
           nvm install 16
           nvm use 16
-          npm install -g pnpm
+      - name: 📦 Install pnpm
+        run: npm install -g pnpm
       - name: 🛠️ Build the extension
         run: pnpm build
       - name: 📦 Package the extension into a zip artifact
