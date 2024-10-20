@@ -322,3 +322,13 @@ export const lightIcon = (option) => {
     chrome.action.setBadgeText({ text: "" })
   })
 }
+
+/**
+ * @function 定义将Blob转换为File的函数
+ */
+export const blobToFile = (blob, extraData) => {
+  return new File([blob], extraData.fileName, {
+    type: blob.type,
+    lastModified: Date.now()
+  })
+}

@@ -88,6 +88,16 @@ const Content = () => {
         })
     },
     {
+      title: "tinyPng",
+      icon: "pajamas:doc-compressed",
+      iconColor: "orange",
+      event: () =>
+        createTab({
+          chrome,
+          url: "TinyPng"
+        })
+    },
+    {
       title: "githubDev",
       icon: "line-md:github-loop",
       iconColor: "",

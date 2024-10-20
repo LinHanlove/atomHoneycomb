@@ -27,6 +27,9 @@
     "@types/node": "20.11.5",
     "@types/react": "18.2.48",
     "@types/react-dom": "18.2.18",
+    "blueimp-canvas-to-blob": "^3.29.0",
+    "image-conversion": "^2.1.1",
+    "is-blob": "^3.0.0",
     "postcss": "8.4.33",
     "typescript": "5.3.3"
   },
