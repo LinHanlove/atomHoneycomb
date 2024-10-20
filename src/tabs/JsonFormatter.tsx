@@ -7,7 +7,7 @@ import "~/assets/style/jsonFormatter.css"
 
 import { notify } from "~utils"
 
-import { jsonFormatter as formatter } from "../utils/jsonFormatter"
+import { jsonFormatter as formatter } from "../utils"
 
 export default function JsonFormatter() {
   // 格式化前的数据

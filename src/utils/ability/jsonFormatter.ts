@@ -23,6 +23,7 @@ export const jsonFormatter = (
   // 将JSON转换为HTML。
   const invalidHtml = /[<>&]|\\"/g
 
+  // 解析JSON字符串的每一行到四个部分。
   const jsonLine = /^( *)("[^"]+": )?("[^"]*"|[\w.+-]*)?([{}[\],]*)?$/gm
   // 正则表达式解析JSON字符串的每一行到四个部分：
   //    捕获组         部分        描述                    例子
