@@ -57,12 +57,12 @@ importers:
       blueimp-canvas-to-blob:
         specifier: ^3.29.0
         version: 3.29.0
-      image-conversion:
-        specifier: ^2.1.1
-        version: 2.1.1
       is-blob:
         specifier: ^3.0.0
         version: 3.0.0
+      pako:
+        specifier: ^2.1.0
+        version: 2.1.0
       postcss:
         specifier: 8.4.33
         version: 8.4.33
@@ -2157,9 +2157,6 @@ packages:
     resolution: {integrity: sha512-MAb38BcSbH0eHNBxn7ql2NH/kX33OkB3lZ1BNdh7ENeRChHTYsTvWrMubiIAMNS2llXEEgZ1MUOBtXChP3kaFQ==}
     engines: {node: '>= 4'}
 
-  image-conversion@2.1.1:
-    resolution: {integrity: sha512-hnMOmP7q2jxA+52FZ+wHNhg3fdFRlgfngsQH2JQHEQkafY7tj/8F15e6Rv/RxDegc872jvyaRHwMbkTZK1Cjbg==}
-
   image-size@0.5.5:
     resolution: {integrity: sha512-6TDAlDPZxUFCv+fuOkIoXT/V/f3Qbq8e37p+YOiYrUv3v9cc3/6x78VdfPgFVaB9dZYeLUfKgHRebpkm/oP2VQ==}
     engines: {node: '>=0.10.0'}
@@ -2670,6 +2667,9 @@ packages:
   package-json@8.1.1:
     resolution: {integrity: sha512-cbH9IAIJHNj9uXi196JVsRlt7cHKak6u/e6AkL/bkRelZ7rlL3X1YKxsZwa36xipOEKAsdtmaG6aAJoM1fx2zA==}
     engines: {node: '>=14.16'}
+
+  pako@2.1.0:
+    resolution: {integrity: sha512-w+eufiZ1WuJYgPXbV/PO3NCMEc3xqylkKHzp8bxp1uW4qaSNQUkwmLLEc3kKsfz8lpV1F8Ht3U1Cm+9Srog2ug==}
 
   parent-module@1.0.1:
     resolution: {integrity: sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==}
@@ -5708,8 +5708,6 @@ snapshots:
 
   ignore@5.2.4: {}
 
-  image-conversion@2.1.1: {}
-
   image-size@0.5.5:
     optional: true
 
@@ -6160,6 +6158,8 @@ snapshots:
       registry-auth-token: 5.0.2
       registry-url: 6.0.1
       semver: 7.5.4
+
+  pako@2.1.0: {}
 
   parent-module@1.0.1:
     dependencies:

@@ -2,6 +2,8 @@ import { clearAllCookie, log, sleep } from "atom-tools"
 
 import { safePages } from "~common"
 import { Message } from "~components/message"
+import Compressor from "~utils/ability/Compressor"
+import UPNG from "~utils/ability/UPNG"
 
 import { notify, sendMessage, sendMessageRuntime } from "./common"
 
@@ -331,4 +333,65 @@ export const blobToFile = (blob, extraData) => {
     type: blob.type,
     lastModified: Date.now()
   })
+}
+
+/**
+ * @function 压缩图片
+ * @description 使用UPNG库
+ * @param file 要压缩的文件
+ * @returns Promise<File>
+ */
+export const UPNG_PNG = async (file: File, quality: number): Promise<File> => {
+  const arrayBuffer = await file.arrayBuffer()
+  const decoded = UPNG.decode(arrayBuffer)
+  const rgba8 = UPNG.toRGBA8(decoded)
+
+  // 这里 保持宽高不变，保持80%的质量（接近于 tinypng 的压缩效果）
+  const compressed = UPNG.encode(
+    rgba8,
+    decoded.width,
+    decoded.height,
+    256 * quality
+  )
+  return new File([compressed], file.name, { type: "image/png" })
+}
+
+/**
+ * @function 压缩图片
+ * @description 使用Compressor库
+ * @param file 要压缩的文件
+ * @returns Promise<File>
+ */
+export const Compressor_PNG = async (
+  file: File,
+  quality: number
+): Promise<File> => {
+  return new Promise((resolve, reject) => {
+    console.log(file, quality)
+
+    new Compressor(file, {
+      quality,
+      success(result) {
+        resolve(result)
+      },
+      error(err) {
+        reject(err)
+      }
+    })
+  })
+}
+
+/**
+ * @function formatFileSize
+ * @description 根据文件大小换算单位
+ * @returns string
+ */
+export const formatFileSize = (size: number): string => {
+  if (size < 1024) {
+    return size + "B"
+  } else if (size < 1024 * 1024) {
+    return (size / 1024).toFixed(2) + "KB"
+  } else if (size < 1024 * 1024 * 1024) {
+    return (size / 1024 / 1024).toFixed(2) + "MB"
+  }
 }

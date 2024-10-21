@@ -88,13 +88,13 @@ const Content = () => {
         })
     },
     {
-      title: "tinyPng",
+      title: "compressHero",
       icon: "pajamas:doc-compressed",
       iconColor: "orange",
       event: () =>
         createTab({
           chrome,
-          url: "TinyPng"
+          url: "CompressHero"
         })
     },
     {
