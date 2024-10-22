@@ -4,8 +4,6 @@ import { useEffect, useState } from "react"
 
 import { useStorage } from "@plasmohq/storage/hook"
 
-import cssText from "~/assets/style/base.scss"
-
 import "~/assets/style/tailwind.css"
 
 import { defaultSetting, icons } from "~common"
@@ -20,6 +18,8 @@ import {
   sendMessage,
   setLocal
 } from "~utils"
+
+const cssText = require("~/assets/style/base.css")
 
 export const config: PlasmoCSConfig = {
   matches: ["<all_urls>"],

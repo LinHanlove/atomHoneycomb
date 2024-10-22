@@ -4,12 +4,7 @@ import {
   createTab,
   lightIcon,
   Log,
-  notify,
-  openExtension,
-  openGitHubDev,
-  openIntroduce,
-  quickSearch,
-  sendMessage
+  openGitHubDev
 } from "~utils"
 
 /**

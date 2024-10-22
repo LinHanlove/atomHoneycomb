@@ -1,0 +1,48 @@
+
+
+
+:root {
+  --ruler: 16px;
+  --color-red: #AE1100;
+  --color-bg: #EBECF0;
+  --color-shadow: #BABECC;
+  --color-white: #FFF;
+  --base-space: 40px;
+}
+
+button {
+  color: #61677C;
+  font-weight: bold;
+  box-shadow: -5px -5px 20px var(--color-white), 5px 5px 20px var(--color-shadow);
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  font-weight: 600;
+  padding: 0 !important;
+}
+
+button:hover {
+  box-shadow: -2px -2px 5px var(--color-white), 2px 2px 5px var(--color-shadow);
+}
+
+button:active,
+button.active {
+  box-shadow: inset 1px 1px 2px orange, inset -1px -1px 2px var(--color-white);
+}
+
+button.atom-button {
+  border-radius: 8px;
+  width: var(--base-space);
+  height: var(--base-space);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+button.atom-button--small {
+  border-radius: 8px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
