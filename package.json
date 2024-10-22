@@ -65,13 +65,13 @@
         },
         "description": "激活githubDev"
       },
-      "refresh": {
+      "compressHero": {
         "suggested_key": {
           "default": "Alt+C",
           "mac": "Alt+C",
           "windows": "Alt+C"
         },
-        "description": "强刷"
+        "description": "图片压缩"
       },
       "areaScreenshot": {
         "suggested_key": {

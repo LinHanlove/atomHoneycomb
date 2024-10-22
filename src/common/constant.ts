@@ -120,6 +120,16 @@ export const menuList = [
     }
   },
   {
+    id: "compressHero",
+    title: "compressHero",
+    onclick: function () {
+      return createTab({
+        chrome,
+        url: "CompressHero"
+      })
+    }
+  },
+  {
     id: "refresh",
     title: "refresh",
     onclick: function () {

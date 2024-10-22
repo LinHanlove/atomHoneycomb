@@ -27,12 +27,11 @@ chrome.commands.onCommand.addListener((command) => {
     })
   // 打开githubDev
   if (command === "openGitHubDev") openGitHubDev()
-  // 强制刷新
-  if (command === "refresh")
-    sendMessage({
-      type: "refresh",
-      origin: "background",
-      chrome
+  // 图片压缩
+  if (command === "compressHero")
+    createTab({
+      chrome,
+      url: "CompressHero"
     })
 })
 
