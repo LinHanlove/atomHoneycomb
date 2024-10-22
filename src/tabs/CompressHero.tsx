@@ -95,6 +95,18 @@ export default function CompressHero() {
     e.target.value = ""
   }
 
+  /**
+   * @function handleDownload
+   * @description 下载文件
+   */
+  const handleDownload = (file: any) => {
+    const a = document.createElement("a")
+    const downloadFile = compressorDetails.find((item) => item.id === file.id)?.file
+    a.href = URL.createObjectURL(downloadFile)
+    a.download = downloadFile.name
+    a.click()
+  }
+
   return (
     <>
       <h2 className="title text-center text-2xl font-bold py-4">
@@ -115,7 +127,7 @@ export default function CompressHero() {
           </a>
         </div>
       </div>
-      <div className="container h-[75vh] overflow-y-auto border-2 border-gray-200 rounded-lg p-4 mx-4">
+      <div className="container h-[80vh] overflow-y-auto border-2 border-gray-200 rounded-lg p-4 mx-4">
         {/* S 调节区 */}
         <div className="flex justify-start">
           <div className="flex items-center mb-4 bg-[#f5f5f5] p-1 rounded-lg">
@@ -180,7 +192,7 @@ export default function CompressHero() {
                   }
                 />
               </div>
-              <div className="h-full group flex items-end justify-center ">
+              <div onClick={()=>handleDownload(item)} className="h-full group flex items-end justify-center">
                 <Icon
                   icon="line-md:download-loop"
                   className="w-[20px] h-[20px] rounded-full  text-[orange] group-hover:bg-[#f5f5f5] group-hover:scale-150 transition-all duration-300"
