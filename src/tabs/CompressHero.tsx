@@ -107,6 +107,15 @@ export default function CompressHero() {
     a.click()
   }
 
+  /**
+   * @function handleDelete
+   * @description 删除文件
+   */
+  const handleDelete = (file: any) => {
+    setFileList(fileList.filter((item) => item.id !== file.id))
+    setCompressorDetails(compressorDetails.filter((item) => item.id !== file.id))
+  }
+
   return (
     <>
       <h2 className="title text-center text-2xl font-bold py-4">
@@ -149,8 +158,9 @@ export default function CompressHero() {
         </div>
 
         {/* E 调节区 */}
+
+        {/* S 上传区 */}
         <div className="content flex items-start justify-center ">
-          {/* S 上传区 */}
           <div className="flex justify-center">
             <input
               type="file"
@@ -190,6 +200,12 @@ export default function CompressHero() {
                     compressorDetails.find((i) => i.id === item.id)
                       ?.compressibility
                   }
+                />
+              </div>
+              <div onClick={()=>handleDelete(item)} className="h-full group flex items-end justify-center">
+                <Icon
+                  icon="mdi:delete-outline"
+                  className="w-[20px] h-[20px] rounded-full  text-red-500 group-hover:bg-[#f5f5f5] group-hover:scale-150 transition-all duration-300"
                 />
               </div>
               <div onClick={()=>handleDownload(item)} className="h-full group flex items-end justify-center">
