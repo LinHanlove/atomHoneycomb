@@ -1,7 +1,5 @@
 import Cropper from "cropperjs"
 
-import "cropperjs/dist/cropper.css"
-
 import { createButton } from "~components/createButton"
 import type { TYPE } from "~types"
 import { disableBrowserEvent, Log } from "~utils"

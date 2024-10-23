@@ -7,8 +7,6 @@ import {
   openGitHubDev
 } from "~utils"
 
-console.log("background.ts loaded")
-
 /**
  * @function 监听快捷键命令
  */

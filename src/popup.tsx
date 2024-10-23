@@ -5,6 +5,7 @@ import { useEffect, useState } from "react"
 import { useStorage } from "@plasmohq/storage/hook"
 
 import "~/assets/style/tailwind.css"
+import "~/assets/style/cropper.css"
 
 import { defaultSetting, icons } from "~common"
 import { Input } from "~components/atomInput"
