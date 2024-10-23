@@ -1,18 +1,19 @@
 import Cropper from "cropperjs"
+
 import "cropperjs/dist/cropper.css"
-import {  disableBrowserEvent, Log } from "~utils"
-import  {createButton}  from "~components/createButton"
+
+import { createButton } from "~components/createButton"
 import type { TYPE } from "~types"
+import { disableBrowserEvent, Log } from "~utils"
 
 /**
  * @class 区域截图
  */
-const areaScreenshot =  (base64) =>{
-
+const areaScreenshot = (base64) => {
   // 截图内容
   const cropContext = {} as TYPE.IContent
   // 截图
-  let cropImage:any
+  let cropImage: any
   // 网页截图容器
   const imageContainer = document.createElement("div")
   // 截图容器
@@ -20,10 +21,10 @@ const areaScreenshot =  (base64) =>{
   // 截图框
   let cropBox = null
   // 裁切器
-  let cropper:any
+  let cropper: any
 
   // 初始化
-  const init =()=>{
+  const init = () => {
     // 查找已经存在的截图容器
     const existingContainer = document.querySelector(".image-container")
     if (existingContainer) {
@@ -32,18 +33,18 @@ const areaScreenshot =  (base64) =>{
     }
 
     createContainer().then((container) => {
-      document.body.appendChild(container)
+      window.document.body.appendChild(container)
       imageDom.src = base64
-      imageContainer.appendChild(imageDom)
+      imageContainer && imageContainer.appendChild(imageDom)
       initCrop(imageDom)
     })
   }
 
   /**
    * 创建截图容器
-   * @returns 
+   * @returns
    */
-  const createContainer = ():Promise<HTMLDivElement> =>{
+  const createContainer = (): Promise<HTMLDivElement> => {
     return new Promise((resolve, reject) => {
       imageContainer.className = "image-container"
       imageContainer.style.position = "fixed"
@@ -61,7 +62,7 @@ const areaScreenshot =  (base64) =>{
    * @function 初始化裁切器
    */
   const initCrop = (content: HTMLImageElement) => {
-    return cropper = new Cropper(content, {
+    return (cropper = new Cropper(content, {
       autoCrop: false, // 关闭自动裁剪
       autoCropArea: 0.8,
       zoomOnTouch: false,
@@ -73,7 +74,7 @@ const areaScreenshot =  (base64) =>{
       crop: (event) => onCrop(event),
       cropend: () => onCropend(),
       ready: (event) => onReady(event)
-    })
+    }))
   }
 
   /**
@@ -101,7 +102,7 @@ const areaScreenshot =  (base64) =>{
   /**
    * @function 监听裁剪结束
    */
-  const  onCropend = async() => {
+  const onCropend = async () => {
     cropImage = await crop(base64, cropContext)
     Log("裁剪结束--->", cropImage)
 
@@ -115,11 +116,11 @@ const areaScreenshot =  (base64) =>{
     // 添加操作按钮组
     cropBox.append(
       createButton({
-        cropper:cropper,
-        cropImage:cropImage,
-        imageContainer:imageContainer,
-        cropBox:cropBox,
-        imageDom:imageDom
+        cropper: cropper,
+        cropImage: cropImage,
+        imageContainer: imageContainer,
+        cropBox: cropBox,
+        imageDom: imageDom
       })
     )
     setBoundary(cropper)
@@ -194,6 +195,5 @@ const areaScreenshot =  (base64) =>{
     init
   }
 }
-
 
 export default areaScreenshot
