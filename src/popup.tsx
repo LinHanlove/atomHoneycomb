@@ -79,7 +79,7 @@ const Content = () => {
       event: () => openCapture()
     },
     {
-      title: "Json Formatter",
+      title: "JsonFormatter",
       icon: "si:json-alt-1-fill",
       iconColor: "",
       event: () =>
@@ -309,7 +309,7 @@ const Content = () => {
   return (
     <div
       style={{
-        width: "400px",
+        width: "420px",
         minHeight: "340px"
       }}>
       <header className="text-center text-[18px] text-[#000] font-bold  py-2 border-b-[1px] border-[orange]">
@@ -347,13 +347,13 @@ const Content = () => {
       {/* E 快捷输入框 */}
 
       {/* S 功能区 */}
-      <div className="menu h-[180px] px-4 border-t-[1px] border-[#f4f7f6] flex justify-between  pt-3 gap-2 overflow-y-auto">
-        <div className="w-[120px] h-0  gap-y-2 grid grid-cols-2 items-start  ">
+      <div className="menu h-[180px] px-3 border-t-[1px] border-r-[1px] border-[#f4f7f6] flex justify-between  pt-3 gap-2 overflow-y-auto">
+        <div className="w-[150px] h-0  gap-y-2 grid grid-cols-2 items-start  ">
           {menuList.map((item, index) => {
             return (
               <div
                 key={index}
-                className="w-[40px] h-[50px] flex justify-center items-center flex-col">
+                className="col-span-1 group flex justify-center items-center flex-col text-nowrap ">
                 {/* 点击截图 */}
                 <button
                   className="atom-button--small !shrink-0"
@@ -367,7 +367,7 @@ const Content = () => {
                   />
                 </button>
                 {/* 点击截图 */}
-                <div className="w-[120px] text-center mt-1 text-nowrap truncate">
+                <div className="mt-1 group-hover:text-[orange]">
                   {item.title}
                 </div>
               </div>
@@ -375,27 +375,27 @@ const Content = () => {
           })}
         </div>
 
-        <div className="flex-1  h-0 gap-y-2 grid grid-cols-4 items-start pl-4 border-l-[1px] border-[#f4f7f6]">
+        <div className="flex-1  h-0 gap-y-2 grid grid-cols-4 items-start pl-2 ">
           {setting.length > 0 &&
             setting.map((item, idx) => {
               return (
                 <div
                   key={idx}
-                  className="w-[40px] h-[50px] flex justify-center items-center flex-col col-span-1">
+                  className="col-span-1 group flex justify-center items-center flex-col ">
                   {/* 点击搜索 */}
                   <button
-                    className={`atom-button--small ${searchTarget === idx.toString() && "active"}`}
+                    className={`atom-button--small ${searchTarget === idx.toString() && "active"} !shrink-0`}
                     type="button"
                     title="搜索预设"
                     onClick={() => onSetSearchTarget(idx.toString())}>
-                    <Icon
+                    <Icon 
                       icon={randomIcon()}
-                      className=" text-[orange] w-[20px] h-[20px]"
+                      className=" text-[orange] w-[20px] h-[20px] "
                     />
                   </button>
                   {/* 点击搜索 */}
                   <p
-                    className={`w-full text-center mt-1 ${searchTarget === idx.toString() && "text-[orange]  font-bold"}`}>
+                    className={`w-full text-center mt-1 ${searchTarget === idx.toString() && "text-[orange] font-bold"} group-hover:text-[orange] `}>
                     {item.alias}
                   </p>
                 </div>

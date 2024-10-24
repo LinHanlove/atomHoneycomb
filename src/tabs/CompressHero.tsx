@@ -211,7 +211,7 @@ export default function CompressHero() {
       <h2 className="title text-center text-2xl font-bold py-4">
         CompressHero
       </h2>
-      <div className="subTitle mx-4  text-[10px] font-semibold flex ">
+      <div className="subTitle mx-4  text-[12px] font-semibold flex ">
         <div className="mb-1 ">
           智能有损压缩，支持PNG、JPEG、GIF、WEBP等格式
         </div>

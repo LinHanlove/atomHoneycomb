@@ -109,7 +109,7 @@ export default function JsonFormatter() {
       <h2 className="title text-center text-2xl font-bold py-4">
         JsonFormatter
       </h2>
-      <div className="subTitle mx-4  text-[10px] font-semibold flex ">
+      <div className="subTitle mx-4  text-[12px] font-semibold flex ">
         <div className="waring">注意：</div>
         <div className="mb-1 ">
           在【lineNumbers】模式下双击格式化后的行可复制到剪切板

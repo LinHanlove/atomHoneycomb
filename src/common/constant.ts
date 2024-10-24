@@ -98,12 +98,12 @@ export const defaultSetting = [
     suffix: ".html"
   },
   {
-    alias: "antd-vue",
+    alias: "antdV",
     prefix: "https://www.antdv.com/components/",
     suffix: "-cn"
   },
   {
-    alias: "antd-react",
+    alias: "antdR",
     prefix: "https://ant.design/components/",
     suffix: "-cn"
   },
