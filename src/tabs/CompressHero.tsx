@@ -226,7 +226,7 @@ export default function CompressHero() {
           </a>
         </div>
       </div>
-      <div className="container h-[80vh] overflow-y-auto border-2 border-gray-200 rounded-lg p-4 mx-4">
+      <div className="container mx-[auto] mt-4 h-[80vh] overflow-y-auto border-2 border-gray-200 rounded-lg p-4">
         {/* S 调节区 */}
         <div className="flex justify-start">
           <div className="flex items-center mb-4 bg-[#f5f5f5] p-1 rounded-lg">

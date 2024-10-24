@@ -129,7 +129,7 @@ export default function JsonFormatter() {
           </a>
         </div>
       </div>
-      <div className="container border-2 border-gray-200 rounded-lg p-4 mx-4">
+      <div className="container  mx-[auto] mt-4  border-2 border-gray-200 rounded-lg p-4 ">
         <div className="content  grid grid-cols-2 ">
           <div className="col-span-1  pr-4">
             <h3 className="text-xl font-bold py-2">Input:</h3>

@@ -81,7 +81,32 @@ export const defaultSetting = [
     alias: "juejin",
     prefix: "https://juejin.cn/search?query=",
     suffix: "&fromSeo=0&fromHistory=0&fromSuggest=0"
-  }
+  },
+  {
+    alias: "vant",
+    prefix: "https://vant.pro/vant-weapp/#/",
+    suffix: ""
+  },
+  {
+    alias: "element2",
+    prefix: "https://element.eleme.cn/#/zh-CN/component/",
+    suffix: ""
+  },
+  {
+    alias: "element3",
+    prefix: "https://element-plus.org/zh-CN/component/",
+    suffix: ".html"
+  },
+  {
+    alias: "antd-vue",
+    prefix: "https://www.antdv.com/components/",
+    suffix: "-cn"
+  },
+  {
+    alias: "antd-react",
+    prefix: "https://ant.design/components/",
+    suffix: "-cn"
+  },
 ]
 
 /**
