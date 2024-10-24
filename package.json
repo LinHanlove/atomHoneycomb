@@ -42,8 +42,6 @@
       "extension_pages": "script-src 'self' ; object-src 'self'"
     },
     "permissions": [
-      "topSites",
-      "scripting",
       "activeTab",
       "tabs",
       "storage",

@@ -51,6 +51,7 @@ export const windowRefresh = (window: Window, chrome: any) => {
     message: "网页已刷新🥳",
     chrome
   })
+
 }
 
 /**
