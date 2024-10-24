@@ -107,7 +107,7 @@ export const Log = (msg: any, ...other) => {
 /**
  * @function 区域截图
  */
-export const areaScreenshot = (chrome) => {
+export const openCapture = (chrome) => {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (!tabs[0].windowId) return
     chrome.tabs.captureVisibleTab(
@@ -117,15 +117,12 @@ export const areaScreenshot = (chrome) => {
         if (chrome.runtime.lastError) {
           Log("截图失败:", chrome.runtime.lastError)
         } else {
-          chrome.tabs
-            .sendMessage(tabs[0].id, {
-              base64: image,
-              type: "areaScreenshot",
-              origin: "background"
-            })
-            .catch((error) => {
-              Log("content-script消息发送失败：", error)
-            })
+          sendMessage({
+            chrome,
+            data: image,
+            type: "areaScreenshot",
+            origin: "popup"
+          })
         }
       }
     )

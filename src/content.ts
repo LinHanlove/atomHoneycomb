@@ -20,11 +20,11 @@ export const config: PlasmoCSConfig = {
  */
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   Log("content收到的消息：", message, sender, sendResponse)
-  const { origin, type } = message
+  const { origin, type,data } = message
 
   if (type === "areaScreenshot") {
     window.focus()
-    areaScreenshot(message.base64).init()
+    areaScreenshot(data,chrome).init()
     return true
   }
   // 强制刷新

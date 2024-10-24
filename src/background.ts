@@ -1,10 +1,10 @@
 import { menuList } from "~common"
 import {
-  areaScreenshot,
   createTab,
   lightIcon,
   Log,
-  openGitHubDev
+  openCapture,
+  openGitHubDev,
 } from "~utils"
 
 /**
@@ -13,7 +13,7 @@ import {
 chrome.commands.onCommand.addListener((command) => {
   Log(`Command "${command}" triggered-bg`)
   // 区域截图
-  if (command === "areaScreenshot") areaScreenshot(chrome)
+  if (command === "areaScreenshot") openCapture(chrome)
   // jsonFormatter
   if (command === "jsonFormatter")
     createTab({

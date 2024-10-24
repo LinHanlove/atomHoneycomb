@@ -14,6 +14,7 @@ import {
   getLocal,
   Log,
   notify,
+  openCapture,
   openGitHubDev,
   openIntroduce,
   sendMessage,
@@ -76,7 +77,7 @@ const Content = () => {
       title: "截图",
       icon: "tabler:screenshot",
       iconColor: "#00c983",
-      event: () => openCapture()
+      event: () => openCapture(chrome)
     },
     {
       title: "JsonFormatter",
@@ -246,38 +247,6 @@ const Content = () => {
       key: "searchTarget",
       value: idx.toString(),
       chrome
-    })
-  }
-
-  // 截图
-  const openCapture = () => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      Log("点击了", tabs)
-
-      if (!tabs[0].windowId) return
-      // 详细文档：https://developer.chrome.google.cn/docs/extensions/reference/api?hl=zh-cn
-      chrome.tabs.captureVisibleTab(
-        tabs[0].windowId,
-        { format: "png", quality: 100 },
-        (image) => {
-          if (chrome.runtime.lastError) {
-            Log("截图失败:", chrome.runtime.lastError)
-          } else {
-            // 发送消息给content-script
-            Log("截图成功:", image)
-
-            chrome.tabs
-              .sendMessage(tabs[0].id, {
-                base64: image,
-                type: "areaScreenshot",
-                origin: "popup"
-              })
-              .catch((error) => {
-                Log("content-script消息发送失败：", error)
-              })
-          }
-        }
-      )
     })
   }
 

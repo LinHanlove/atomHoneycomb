@@ -11,8 +11,9 @@ export const createButton = (option) => {
    * @function 确认截图
    */
   const  confirmScreenshot = (option)=> {
+    const { cropImage,chrome } = option
     Log(option, "确认截图")
-    const { cropImage } = option
+
     if (!cropImage) return
     copyImgToClipboard(cropImage)
     cancelScreenshot(option)

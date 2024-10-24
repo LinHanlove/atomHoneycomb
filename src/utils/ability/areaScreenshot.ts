@@ -7,7 +7,7 @@ import { disableBrowserEvent, Log } from "~utils"
 /**
  * @class 区域截图
  */
-const areaScreenshot = (base64) => {
+const areaScreenshot = (base64,chrome) => {
   // 截图内容
   const cropContext = {} as TYPE.IContent
   // 截图
@@ -118,7 +118,8 @@ const areaScreenshot = (base64) => {
         cropImage: cropImage,
         imageContainer: imageContainer,
         cropBox: cropBox,
-        imageDom: imageDom
+        imageDom: imageDom,
+        chrome
       })
     )
     setBoundary(cropper)
